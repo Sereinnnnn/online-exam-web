@@ -1,5 +1,5 @@
 <template>
-  <div class="header-box">
+  <div id="header-box" class="header-box">
     <div>
       <header class="header-w">
         <div class="header-w-box">
@@ -8,6 +8,18 @@
               <router-link to="/" title="在线考试">在线考试</router-link>
             </h1>
           </div>
+          <div class="nav-bar">
+            <el-menu
+              :show-timeout="200"
+              :default-active="$route.path"
+              class="el-menu-header"
+              mode="horizontal">
+              <el-menu-item index="/home" @click="open('/home')">首页</el-menu-item>
+              <el-menu-item index="/functions" @click="open('/functions')">功能</el-menu-item>
+              <el-menu-item index="/us" @click="open('/us')">我们</el-menu-item>
+            </el-menu>
+          </div>
+          <div class="line"></div>
           <div class="right-box">
             <div class="nav-list">
               <el-autocomplete
@@ -31,7 +43,7 @@
                     <ul>
                       <li class="nav-user-avatar">
                         <div>
-                          <span class="avatar" style="background-image: url(../../../static/images/user.png)">
+                          <span class="avatar" style="background-image: url(../../../static/images/home/user.png)">
                           </span>
                         </div>
                         <p class="name">{{userInfo.username}}</p>
@@ -56,7 +68,28 @@
 
 <script>
 export default {
+  mounted () {
+    // 监听滚动
+    window.addEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    // 导航栏切换
+    open (path) {
+      this.$router.push({
+        path: path
+      })
+    },
+    handleScroll () {
+      let nav = document.getElementById('header-box')
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 50) {
+        nav.style.position = 'fixed'
+        nav.style.top = '0'
+        nav.style.zIndex = '99999'
+      } else {
+        nav.style.position = 'relative'
+      }
+    },
     querySearchAsync (queryString, callback) {
       const exams = [{
         name: '语文考试',
@@ -102,8 +135,8 @@ export default {
     position: relative;
   }
   .header-box {
-    background: rgb(241, 241, 241);
     width: 100%;
+    background-color: #ffffff;
   }
   .header-w-box {
     display: flex;
@@ -119,7 +152,7 @@ export default {
         display: block;
         @include wh(220px, 50px);
         text-indent: -9999px;
-        background: url(/static/images/logo.png) no-repeat 0 0;
+        background: url(/static/images/home/logo.png) no-repeat 0 0;
       }
     }
     .nav-list {
@@ -210,7 +243,7 @@ export default {
           left: 8px;
           top: 0;
           @include wh(20px);
-          background: url(/static/images/account-icon.png) -155px 0;
+          background: url(/static/images/home/account-icon.png) -155px 0;
           background-size: 240px 107px;
           transition: none;
         }
@@ -296,12 +329,30 @@ export default {
       &:before {
         position: absolute;
         content: " ";
-        background: url(/static/images/account-icon.png) no-repeat -49px -43px;
+        background: url(/static/images/home/account-icon.png) no-repeat -49px -43px;
         background-size: 240px 107px;
         @include wh(20px, 8px);
         top: -8px;
         margin-left: -10px;
       }
     }
+  }
+  .nav-bar {
+    display: flex;
+  }
+  .el-menu-header {
+    color: #666666;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 20px 12px 19px;
+    border: 1px solid transparent;
+    bottom: -1px;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+    background-color: transparent;
+    border-radius: 0;
+    margin: 12px 0 5px;
   }
 </style>

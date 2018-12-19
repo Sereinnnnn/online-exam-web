@@ -27,7 +27,7 @@
           <el-col :span="4" class="footer-col">
             <h3 class="c1">友情链接</h3>
             <ul>
-              <li class="c2"><a class="c3" target="_blank" href="http://www.smartisan.com">Smartisan</a></li>
+              <li class="c2"><a class="c3" target="_blank" href="http://www.baidu.com">baidu</a></li>
               <li class="c2"><a class="c3" target="_blank" href="https://cn.vuejs.org/">Vue</a></li>
             </ul>
           </el-col>
@@ -182,7 +182,7 @@ export default {
   .copyright {
     color: #434d55;
     font-size: 12px;
-    padding: 40px 0 0;
+    padding: 10px 0 0;
     display: flex;
     align-items: left;
   }
@@ -214,11 +214,11 @@ export default {
     height: 15px;
     line-height: 15px;
     color: #757575;
+    margin: 0 0 0 12px;
   }
 
   .cop {
     clear: both;
-    padding: 10px 0 0;
     height: 15px;
   }
 
