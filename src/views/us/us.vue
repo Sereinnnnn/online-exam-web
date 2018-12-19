@@ -1,8 +1,6 @@
 <template>
   <div>
-    <o-header></o-header>
-    <router-view class="main"></router-view>
-    <o-footer></o-footer>
+    <h1>us</h1>
   </div>
 </template>
 <script>

@@ -15,8 +15,8 @@
               class="el-menu-header"
               mode="horizontal">
               <el-menu-item index="/home" @click="open('/home')">首页</el-menu-item>
-              <el-menu-item index="/functions" @click="open('/functions')">功能</el-menu-item>
-              <el-menu-item index="/us" @click="open('/us')">我们</el-menu-item>
+              <el-menu-item index="/function/functions" @click="open('/function/functions')">功能</el-menu-item>
+              <el-menu-item index="/us/uss" @click="open('/us/uss')">我们</el-menu-item>
             </el-menu>
           </div>
           <div class="line"></div>
@@ -75,8 +75,10 @@ export default {
   methods: {
     // 导航栏切换
     open (path) {
+      console.log(path)
       this.$router.push({
-        path: path
+        path: path,
+        query: {}
       })
     },
     handleScroll () {
@@ -87,7 +89,7 @@ export default {
         nav.style.top = '0'
         nav.style.zIndex = '99999'
       } else {
-        nav.style.position = 'relative'
+        //nav.style.position = 'relative'
       }
     },
     querySearchAsync (queryString, callback) {

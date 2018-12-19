@@ -1,6 +1,6 @@
 <template>
   <div>
-    dddd
+    <h1>functions</h1>
   </div>
 </template>
 <script>
