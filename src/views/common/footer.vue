@@ -90,10 +90,7 @@ export default {
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
   .footer {
-    padding: 50px 0 20px;
-    border-top: 1px solid #e6e6e6;
-    background: #fafafa;
-    margin-top: 60px;
+    background: #f6f6f6;
     height: 350px;
     display: flex;
     flex-direction: column;

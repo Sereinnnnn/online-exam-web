@@ -15,8 +15,8 @@
               class="el-menu-header"
               mode="horizontal">
               <el-menu-item index="/home" @click="open('/home')">首页</el-menu-item>
-              <el-menu-item index="/function/functions" @click="open('/function/functions')">功能</el-menu-item>
-              <el-menu-item index="/us/uss" @click="open('/us/uss')">我们</el-menu-item>
+              <el-menu-item index="/functions" @click="open('/functions')">功能</el-menu-item>
+              <el-menu-item index="/us" @click="open('/us')">关于我们</el-menu-item>
             </el-menu>
           </div>
           <div class="line"></div>
@@ -35,7 +35,9 @@
                 @select="handleSelect">
               </el-autocomplete>
             </div>
-            <div class="nav-aside" ref="aside">
+            <el-button v-if="!login" type="primary" plain size="medium" class="login-button" @click="handleRegister">注册</el-button>
+            <el-button v-if="!login" size="medium" plain class="login-button" @click="handleLogin">登录</el-button>
+            <div v-if="login" class="nav-aside" ref="aside">
               <div class="user pr">
                 <router-link to="/user">个人中心</router-link>
                 <div class="nav-user-wrapper pa" v-if="login">
@@ -43,8 +45,7 @@
                     <ul>
                       <li class="nav-user-avatar">
                         <div>
-                          <span class="avatar" style="background-image: url(../../../static/images/home/user.png)">
-                          </span>
+                          <img class="avatar" :src="userInfo.avatar">
                         </div>
                         <p class="name">{{userInfo.username}}</p>
                       </li>
@@ -67,10 +68,32 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   mounted () {
     // 监听滚动
-    window.addEventListener('scroll', this.handleScroll)
+    // window.addEventListener('scroll', this.handleScroll)
+  },
+  computed: {
+    // 获取用户信息
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
+  },
+  created () {
+    this.checkLogin()
+  },
+  // 检测路由变化
+  watch: {
+    $route () {
+      this.checkLogin()
+    }
+  },
+  data () {
+    return {
+      login: false,
+      input: ''
+    }
   },
   methods: {
     // 导航栏切换
@@ -89,7 +112,7 @@ export default {
         nav.style.top = '0'
         nav.style.zIndex = '99999'
       } else {
-        //nav.style.position = 'relative'
+        // nav.style.position = 'relative'
       }
     },
     querySearchAsync (queryString, callback) {
@@ -111,18 +134,27 @@ export default {
     handleIconClick (item) {
       console.log(item)
     },
+    // 注册
+    handleRegister () {
+      this.$router.push('/register')
+    },
+    // 登录
+    handleLogin () {
+      this.$router.push('/login')
+    },
     // 登出
     logOut () {
-      console.log('登出.')
-    }
-  },
-  data () {
-    return {
-      userInfo: {
-        username: '张三'
-      },
-      login: true,
-      input: ''
+      this.login = false
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload()
+      })
+    },
+    // 检测登录
+    checkLogin () {
+      console.log(this.userInfo)
+      if (this.userInfo.username !== undefined) {
+        this.login = true
+      }
     }
   }
 }
@@ -289,6 +321,7 @@ export default {
             @include wh(100%);
             background-repeat: no-repeat;
             background-size: contain;
+            cursor: pointer;
           }
         }
         .name {
@@ -356,5 +389,10 @@ export default {
     background-color: transparent;
     border-radius: 0;
     margin: 12px 0 5px;
+  }
+
+  /* 注册登录按钮 */
+  .login-button {
+    margin: 10px;
   }
 </style>

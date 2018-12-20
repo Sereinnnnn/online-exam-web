@@ -21,3 +21,8 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../assets/css/mixin.scss";
+  @import "../assets/css/index.scss";
+</style>
