@@ -6,7 +6,7 @@
         <h1>产品功能</h1>
       </el-col>
     </el-row>
-    <el-tabs v-model="activeFunction" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeFunction" type="card">
       <el-tab-pane label="在线考试" name="online-exam">
         <el-row class="function-img">
           <el-col :span="8">
@@ -74,11 +74,7 @@ export default {
       activeFunction: 'online-exam'
     }
   },
-  methods: {
-    handleClick: function (tab, event) {
-      console.log(event)
-    }
-  }
+  methods: {}
 }
 </script>
 

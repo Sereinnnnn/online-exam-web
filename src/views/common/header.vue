@@ -69,6 +69,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { fetchList } from '@/api/exam/exam'
 export default {
   mounted () {
     // 监听滚动
@@ -98,7 +99,6 @@ export default {
   methods: {
     // 导航栏切换
     open (path) {
-      console.log(path)
       this.$router.push({
         path: path,
         query: {}
@@ -116,15 +116,19 @@ export default {
       }
     },
     querySearchAsync (queryString, callback) {
-      const exams = [{
-        name: '语文考试',
-        value: '语文考试'
-      }, {
-        name: '数学考试',
-        value: '数学考试'
-      }]
-      console.log(queryString)
-      callback(exams)
+      const query = {
+        examinationName: queryString
+      }
+      fetchList(query).then(response => {
+        this.list = response.data.list
+        if (this.list.length > 0) {
+          let exams = []
+          for (let i = 0; i < this.list.length; i++) {
+            exams.push({ name: this.list[i].examinationName, value: this.list[i].examinationName })
+          }
+          callback(exams)
+        }
+      })
     },
     // 选择事件
     handleSelect (item) {
@@ -136,6 +140,8 @@ export default {
     },
     // 注册
     handleRegister () {
+      // 先退出
+      this.logOut()
       this.$router.push('/register')
     },
     // 登录
@@ -145,13 +151,10 @@ export default {
     // 登出
     logOut () {
       this.login = false
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()
-      })
+      this.$store.dispatch('LogOut').then(() => {})
     },
     // 检测登录
     checkLogin () {
-      console.log(this.userInfo)
       if (this.userInfo.username !== undefined) {
         this.login = true
       }
@@ -300,6 +303,7 @@ export default {
         }
       }
       .nav-user-avatar {
+        list-style: none;
         > div {
           position: relative;
           margin: 0 auto 8px;
@@ -369,6 +373,9 @@ export default {
         @include wh(20px, 8px);
         top: -8px;
         margin-left: -10px;
+      }
+      li + li {
+        list-style: none;
       }
     }
   }

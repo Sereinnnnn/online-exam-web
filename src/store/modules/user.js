@@ -65,8 +65,6 @@ const user = {
     LogOut ({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.access_token, state.refresh_token).then(() => {
-          // 清除菜单
-          commit('SET_MENU', [])
           // 清除权限
           commit('SET_PERMISSIONS', [])
           // 清除用户信息
@@ -74,7 +72,6 @@ const user = {
           commit('SET_ACCESS_TOKEN', '')
           commit('SET_REFRESH_TOKEN', '')
           commit('SET_ROLES', [])
-          commit('DEL_ALL_TAG')
           removeToken()
           resolve()
         }).catch(error => {
@@ -85,8 +82,6 @@ const user = {
     // 注销session
     FedLogOut ({ commit }) {
       return new Promise(resolve => {
-        // 清除菜单
-        commit('SET_MENU', [])
         // 清除权限
         commit('SET_PERMISSIONS', [])
         // 清除用户信息
@@ -94,7 +89,6 @@ const user = {
         commit('SET_ACCESS_TOKEN', '')
         commit('SET_REFRESH_TOKEN', '')
         commit('SET_ROLES', [])
-        commit('DEL_ALL_TAG')
         removeToken()
         resolve()
       })
