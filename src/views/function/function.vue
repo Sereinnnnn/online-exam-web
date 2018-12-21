@@ -35,7 +35,7 @@
       <el-tab-pane label="在线学习" name="online-practice">
         <el-row class="function-img">
           <el-col :span="8">
-            <router-link to="/home">
+            <router-link to="/courses">
               <img class="img" src="../../../static/images/home/icon_function4.jpg">
               <div class="msg-text">在线学习</div>
               <div class="msg-text-detail">支持选择题</div>

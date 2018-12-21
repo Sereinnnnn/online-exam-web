@@ -7,17 +7,15 @@ body {
   line-height: 1.8;
 }
 
+a {
+  text-decoration: none;
+  outline: none;
+  color: #555;
+}
+
 .header-w {
   width: 1220px;
   margin: 0 auto;
-}
-
-.fl {
-  float: left;
-}
-
-.fr {
-  float: right;
 }
 
 .pr {
@@ -62,4 +60,19 @@ body {
   border: 1px solid #dcdcdc;
   border-color: rgba(0, 0, 0, .14);
   box-shadow: 0 3px 8px -6px rgba(0, 0, 0, .1);
+}
+
+%message-common {
+  padding-top: 10px;
+  height: 120px;
+  color: #fff;
+  background-color: #fff;
+  text-align: center;
+}
+
+%img-common {
+  color: #fff;
+  background-color: #fff;
+  text-align: center;
+  align-items: center;
 }

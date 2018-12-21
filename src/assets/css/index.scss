@@ -29,19 +29,12 @@
 }
 /* 产品特色 */
 .features-msg {
-  padding-top: 10px;
-  height: 120px;
-  color: #fff;
-  background-color: #fff;
-  text-align: center;
+  @extend %message-common;
 }
 
 /* 产品特色 */
 .features-img {
-  color: #fff;
-  background-color: #fff;
-  text-align: center;
-  align-items: center;
+  @extend %img-common;
 }
 
 .msg-text {
@@ -58,40 +51,21 @@
   text-align: center;
 }
 
-a {
-  text-decoration: none;
-  outline: none;
-  color: #555;
-}
-
 /* 适用场景 */
 .scenes-msg {
-  padding-top: 10px;
-  height: 120px;
-  color: #fff;
-  background-color: #fff;
-  text-align: center;
+  @extend %message-common;
 }
 .scenes-img {
-  color: #fff;
+  @extend %img-common;
   background-color: #f6f6f6;
-  text-align: center;
-  align-items: center;
 }
 
 /* 产品功能 */
 .function-msg {
-  padding-top: 10px;
-  height: 120px;
-  color: #fff;
-  background-color: #fff;
-  text-align: center;
+  @extend %message-common;
 }
 .function-img {
-  color: #fff;
-  background-color: #fff;
-  text-align: center;
-  align-items: center;
+  @extend %img-common;
   margin-bottom: 20px;
 }
 

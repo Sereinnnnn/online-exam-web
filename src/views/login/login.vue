@@ -191,7 +191,6 @@ export default {
     top: -10px;
     left: 0;
     width: 100%;
-    height: 100%;
     z-index: -1;
   }
   .bg {
@@ -206,50 +205,50 @@ export default {
     margin: 20px;
     background: #ffffff;
     color: #71767a;
-  .el-form-item {
-    margin-bottom: 25px !important;
-  }
-  h3 {
-    text-align: center;
-    color: #ebedef;
-    margin-top: 0;
-    margin-bottom: 5px;
-  span {
-    color: #20a0ff;
-  }
-  }
-  form {
-    margin-top: 25px;
-  .el-form-item {
-    margin-bottom: 15px;
-  }
-  }
-  a {
-    text-decoration: none;
-    color: #1f2d3d;
-  }
-  button {
-    width: 100%;
-    font-weight: 600;
-  }
-  }
-  .login-code-img {
-    margin-left: 15px;
-    margin-top: 2px;
-  }
-  /* 注册登录 */
-  .login-wrap-title {
-    color: #71767a;
-    padding: 10px 0;
-    margin: 0 15px;
-    cursor: pointer;
-    line-height: 24px;
-    border-bottom: 2px solid transparent;
-  }
-  .login-wrap .el-tabs__item {
-    font-size: 20px;
-  }
-  .login-wrap .el-tabs__nav {
-    left: 30%;
+    .el-tabs__item {
+      font-size: 20px;
+    }
+    .el-tabs__nav {
+      left: 30%;
+    }
+    .login-code-img {
+      margin-left: 15px;
+      margin-top: 2px;
+    }
+    /* 注册登录 */
+    .login-wrap-title {
+      color: #71767a;
+      padding: 10px 0;
+      margin: 0 15px;
+      cursor: pointer;
+      line-height: 24px;
+      border-bottom: 2px solid transparent;
+    }
+    .el-form-item {
+      margin-bottom: 25px !important;
+    }
+    h3 {
+      text-align: center;
+      color: #ebedef;
+      margin-top: 0;
+      margin-bottom: 5px;
+      span {
+        color: #20a0ff;
+      }
+    }
+    form {
+      margin-top: 25px;
+      .el-form-item {
+        margin-bottom: 15px;
+      }
+    }
+    a {
+      text-decoration: none;
+      color: #1f2d3d;
+    }
+    button {
+      width: 100%;
+      font-weight: 600;
+    }
   }
 </style>
