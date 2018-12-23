@@ -8,10 +8,11 @@ export function fetchList(query) {
   })
 }
 
-export function getObj(id) {
+export function getObj(id, query) {
   return request({
     url: '/exam/examination/' + id,
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 

@@ -27,8 +27,8 @@
           <el-col :span="4" class="footer-col">
             <h3 class="c1">友情链接</h3>
             <ul>
-              <li class="c2"><a class="c3" target="_blank" href="http://www.baidu.com">baidu</a></li>
               <li class="c2"><a class="c3" target="_blank" href="https://cn.vuejs.org/">Vue</a></li>
+              <li class="c2"><a class="c3" target="_blank" href="http://element-cn.eleme.io">element</a></li>
             </ul>
           </el-col>
           <el-col :span="4" class="footer-col">

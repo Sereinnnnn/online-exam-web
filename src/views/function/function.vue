@@ -10,7 +10,7 @@
       <el-tab-pane label="在线考试" name="online-exam">
         <el-row class="function-img">
           <el-col :span="8">
-            <router-link to="/home">
+            <router-link to="/exams">
               <img class="img" src="../../../static/images/home/icon_function1.jpg">
               <div class="msg-text">最近发布</div>
               <div class="msg-text-detail">查看、参加最近发布的考试</div>

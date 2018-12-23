@@ -7,6 +7,8 @@ import { getToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
+const whiteList = ['/', '/home', '/functions', '/us', '/register', '/login', '/auth-redirect', '/404', '/401', '/lock']// no redirect whitelist
+
 router.beforeEach((to, from, next) => {
   NProgress.start() // 进度条
   if (getToken()) { // 判断是否已登录
@@ -28,8 +30,13 @@ router.beforeEach((to, from, next) => {
     }
     NProgress.done()
   } else {
-    next()
-    NProgress.done()
+    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+      next()
+    } else {
+      alert('请先登录')
+      next('/login') // 重定向到登录页
+      NProgress.done()
+    }
   }
 })
 
