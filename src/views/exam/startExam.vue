@@ -60,7 +60,7 @@ import { mapState } from 'vuex'
 import CountDown from 'vue2-countdown'
 import { getObj } from '@/api/exam/exam'
 import { fetchSubjectList } from '@/api/exam/subject'
-import { addAnswer, putAnswer, fetchAnswerList } from '@/api/exam/answer'
+import { saveOrUpdate, fetchAnswerList, submit } from '@/api/exam/answer'
 export default {
   components: {
     CountDown
@@ -137,16 +137,6 @@ export default {
     }
     // 加载考试信息
     this.getExamInfo(this.query.examinationId)
-    // 加载题目信息
-    this.getSubjectList(this.query)
-    // 加载答题
-    let query = {
-      userId: this.userInfo.id,
-      examinationId: this.exam.id,
-      courseId: '',
-      subjectId: this.tempSubject.id
-    }
-    this.getAnswerList(query)
   },
   methods: {
     countDownS_cb: function (x) {
@@ -190,6 +180,8 @@ export default {
         }
         // 考试结束时间
         this.endTime = parseInt(this.exam.endTime)
+        // 加载题目信息
+        this.getSubjectList(this.query)
       }).catch(() => {
         this.$notify({
           title: '失败',
@@ -204,6 +196,14 @@ export default {
       fetchSubjectList(query).then(response => {
         this.subjectList = response.data.list
         this.tempSubject = this.subjectList[this.subjectIndex]
+        // 加载答题
+        let query = {
+          userId: this.userInfo.id,
+          examinationId: this.exam.id,
+          courseId: '',
+          subjectId: this.tempSubject.id
+        }
+        this.getAnswerList(query)
       }).catch(() => {
         this.$notify({
           title: '失败',
@@ -220,6 +220,9 @@ export default {
         if (list.length > 0) {
           this.tempAnswer = list[0]
           this.option = this.tempAnswer.answer
+        } else {
+          // 没找到
+          this.resetTempAnswer()
         }
       })
     },
@@ -258,32 +261,29 @@ export default {
         return
       }
       // 提交到后台
-      // 新增
-      if (this.tempAnswer.id === '') {
-        let answer = {
-          id: '',
-          userId: this.userInfo.id,
-          examinationId: this.exam.id,
-          subjectId: this.tempSubject.id,
-          answer: this.option
-        }
-        addAnswer(answer).then(response => {
-          console.log('提交成功')
-        }).catch(() => {
-          console.log('提交失败')
-        })
-      } else {
-        // 更新
-        this.tempAnswer.answer = this.option
-        putAnswer(this.tempAnswer).then(response => {
-          console.log('更新成功')
-        }).catch(() => {
-          console.log('更新失败')
-        })
+      let answer = {
+        id: this.tempAnswer.id,
+        userId: this.userInfo.id,
+        examinationId: this.exam.id,
+        subjectId: this.tempSubject.id,
+        answer: this.option
       }
+      saveOrUpdate(answer).then(response => {
+        console.log('提交成功')
+      }).catch(() => {
+        console.log('提交失败')
+      })
       this.option = ''
       this.subjectIndex++
       this.tempSubject = this.subjectList[this.subjectIndex]
+      // 加载答题
+      let query = {
+        userId: this.userInfo.id,
+        examinationId: this.exam.id,
+        courseId: '',
+        subjectId: this.tempSubject.id
+      }
+      this.getAnswerList(query)
     },
     // 答题卡
     answerCard () {
@@ -302,16 +302,57 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // TODO 提交
+        // 提交到后台
+        let answer = {
+          id: this.tempAnswer.id,
+          userId: this.userInfo.id,
+          examinationId: this.exam.id,
+          subjectId: this.tempSubject.id,
+          answer: this.option
+        }
+        saveOrUpdate(answer).then(response => {
+          this.submitExam(answer)
+          // 禁用提交按钮
+          this.disableSubmit = true
+        }).catch(() => {
+          this.$notify({
+            title: '提示',
+            message: '提交失败',
+            type: 'error',
+            duration: 2000
+          })
+        })
+      })
+    },
+    // 提交考试
+    submitExam (answer) {
+      submit({ examinationId: answer.examinationId, userId: answer.userId }).then(response => {
         this.$notify({
           title: '提示',
           message: '提交成功',
           type: 'success',
           duration: 2000
         })
-        // 禁用提交按钮
-        this.disableSubmit = true
+        this.$router.push({name: 'score', query: { examinationId: answer.examinationId, userId: answer.userId }})
+      }).catch(() => {
+        this.$notify({
+          title: '提示',
+          message: '提交失败',
+          type: 'error',
+          duration: 2000
+        })
       })
+    },
+    // 重置
+    resetTempAnswer () {
+      this.tempAnswer = {
+        id: '',
+        userId: '',
+        examinationId: '',
+        courseId: '',
+        subjectId: '',
+        answer: ''
+      }
     }
   }
 }

@@ -37,3 +37,19 @@ export function delAnswer(id) {
     method: 'delete'
   })
 }
+
+export function saveOrUpdate(obj) {
+  return request({
+    url: '/exam/answer/saveOrUpdate',
+    method: 'post',
+    data: obj
+  })
+}
+
+export function submit(obj) {
+  return request({
+    url: '/exam/answer/submit',
+    method: 'post',
+    data: obj
+  })
+}
