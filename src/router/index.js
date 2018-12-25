@@ -54,6 +54,11 @@ export const constantRouterMap = [
         path: '/score',
         name: 'score',
         component: () => import('@/views/exam/score')
+      },
+      {
+        path: '/incorrect-answer',
+        name: 'incorrect-answer',
+        component: () => import('@/views/exam/incorrectAnswer')
       }
     ]
   },

@@ -1,8 +1,18 @@
 <template>
   <div>
-    <el-row class="course-msg">
-      <el-col :span="24" style="color: black;">
-        <h1>成绩:{{score.score}}</h1>
+    <el-row>
+      <el-col :span="8" :offset="8">
+        <el-card class="score-gray-box" shadow="hover">
+          <div slot="header" class="score-gray-box-title">
+            <span>考试成绩</span>
+          </div>
+          <div class="score">
+            <h3>成绩: <span type="success">{{score.score}}</span></h3>
+            <h3>正确题数: <span type="success">{{score.score}}</span></h3>
+            <h3>错误题数: <span type="success">{{score.score}}</span></h3>
+            <el-button type="success" size="medium" @click="incorrectAnswer">查看错题</el-button>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
   </div>
@@ -47,6 +57,9 @@ export default {
           duration: 2000
         })
       })
+    },
+    incorrectAnswer () {
+      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId}})
     }
   }
 }
@@ -55,7 +68,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/css/common.scss";
-  .course-msg {
-    @extend %message-common;
+  .score-gray-box {
+    @extend .gray-box;
+    margin-top: 50px;
+  }
+  .score-gray-box-title {
+    text-align: center;
+  }
+  .score {
+    margin: 20px;
   }
 </style>
