@@ -4,25 +4,41 @@
       <el-col :span="18" :offset="3">
         <el-card class="incorrect-answer-gray-box">
           <div class="subject-content" v-for="(tempSubject, index) in incorrectAnswerList" :key="tempSubject.id">
-            <div class="subject-title">
-              <span class="subject-title-number">{{index + 1}} .</span>
-              {{tempSubject.subjectName}}（{{tempSubject.score}}分）
-            </div>
-            <div class="subject-option">
-              <el-radio label="A">A. {{tempSubject.optionA}}</el-radio>
-            </div>
-            <div class="subject-option">
-              <el-radio label="B">B. {{tempSubject.optionB}}</el-radio>
-            </div>
-            <div class="subject-option">
-              <el-radio label="C">C. {{tempSubject.optionC}}</el-radio>
-            </div>
-            <div class="subject-option">
-              <el-radio label="D">D. {{tempSubject.optionD}}</el-radio>
-            </div>
-            <span>错误答案：{{tempSubject.incorrectAnswer}}</span>
-            <span>正确答案：{{tempSubject.incorrectAnswer}}</span>
-            <span>解析：{{tempSubject.incorrectAnswer}}</span>
+            <el-row>
+              <el-col :span="24">
+                <div class="subject-title">
+                  <span class="subject-title-number">{{index + 1}} .</span>
+                  {{tempSubject.subjectName}}（{{tempSubject.score}}分）
+                </div>
+                <div class="subject-option">
+                  <el-radio label="A">A. {{tempSubject.optionA}}</el-radio>
+                </div>
+                <div class="subject-option">
+                  <el-radio label="B">B. {{tempSubject.optionB}}</el-radio>
+                </div>
+                <div class="subject-option">
+                  <el-radio label="C">C. {{tempSubject.optionC}}</el-radio>
+                </div>
+                <div class="subject-option">
+                  <el-radio label="D">D. {{tempSubject.optionD}}</el-radio>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <span>错误答案：{{tempSubject.incorrectAnswer}}</span>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <span>参考答案：{{tempSubject.answer}}</span>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <span>解析：{{tempSubject.analysis}}</span>
+              </el-col>
+            </el-row>
           </div>
         </el-card>
       </el-col>

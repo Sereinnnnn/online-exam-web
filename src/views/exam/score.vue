@@ -7,10 +7,10 @@
             <span>考试成绩</span>
           </div>
           <div class="score">
-            <h3>成绩: <span type="success">{{score.score}}</span></h3>
-            <h3>正确题数: <span type="success">{{score.score}}</span></h3>
-            <h3>错误题数: <span type="success">{{score.score}}</span></h3>
-            <el-button type="success" size="medium" @click="incorrectAnswer">查看错题</el-button>
+            <h4>成绩: <span type="success">{{score.score}}</span></h4>
+            <h4>正确题数: <span type="success">{{score.correctNumber}}</span></h4>
+            <h4>错误题数: <span type="success">{{score.inCorrectNumber}}</span></h4>
+            <el-button type="success" size="medium" @click="incorrectAnswer" icon="el-icon-view">查看错题</el-button>
           </div>
         </el-card>
       </el-col>
