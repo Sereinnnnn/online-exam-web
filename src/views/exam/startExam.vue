@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="30">
       <el-col :span="18" :offset="2">
-        <el-card class="subject-box-card">
+        <el-card class="subject-box-card" v-loading="loading">
           <div class="subject-exam-title" >{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
           <div class="subject-content">
             <div class="subject-title">
@@ -61,12 +61,14 @@ import CountDown from 'vue2-countdown'
 import { getObj } from '@/api/exam/exam'
 import { fetchSubjectList } from '@/api/exam/subject'
 import { saveOrUpdate, fetchAnswerList, submit } from '@/api/exam/answer'
+import { addObj } from '@/api/exam/examRecord'
 export default {
   components: {
     CountDown
   },
   data () {
     return {
+      loading: true,
       subjectList: [],
       subjectIndex: 0,
       currentTime: 0,
@@ -121,6 +123,11 @@ export default {
         courseId: '',
         subjectId: '',
         answer: ''
+      },
+      tempExamRecord: {
+        id: '',
+        userId: '',
+        examinationId: ''
       }
     }
   },
@@ -134,9 +141,11 @@ export default {
     let examinationId = this.$route.query.examinationId
     if (examinationId !== undefined && examinationId !== null) {
       this.query.examinationId = examinationId
+      this.tempExamRecord.examinationId = examinationId
+      this.tempExamRecord.userId = this.userInfo.id
     }
-    // 加载考试信息
-    this.getExamInfo(this.query.examinationId)
+    // 开始考试
+    this.startExam(this.query.examinationId)
   },
   methods: {
     countDownS_cb: function (x) {
@@ -145,6 +154,23 @@ export default {
         message: '考试开始',
         type: 'warn',
         duration: 2000
+      })
+    },
+    // 开始考试
+    startExam (examinationId) {
+      this.$confirm('确定要开始吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 创建考试记录
+        addObj(this.tempExamRecord).then(response => {
+          this.tempExamRecord = response.data
+          // 加载考试信息
+          this.getExamInfo(examinationId)
+        })
+      }).catch(() => {
+        this.$router.push({name: 'home'})
       })
     },
     // 考试结束
@@ -224,6 +250,7 @@ export default {
           // 没找到
           this.resetTempAnswer()
         }
+        this.loading = false
       })
     },
     // 上一题
@@ -237,6 +264,7 @@ export default {
         })
         return
       }
+      this.loading = true
       // 先回退题目
       this.subjectIndex--
       this.tempSubject = this.subjectList[this.subjectIndex]
@@ -248,6 +276,7 @@ export default {
         subjectId: this.tempSubject.id
       }
       this.getAnswerList(query)
+      this.loading = false
     },
     // 下一题
     next () {
@@ -260,6 +289,7 @@ export default {
         })
         return
       }
+      this.loading = true
       // 提交到后台
       let answer = {
         id: this.tempAnswer.id,
@@ -284,6 +314,7 @@ export default {
         subjectId: this.tempSubject.id
       }
       this.getAnswerList(query)
+      this.loading = false
     },
     // 答题卡
     answerCard () {

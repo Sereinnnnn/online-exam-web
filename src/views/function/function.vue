@@ -24,7 +24,7 @@
             </router-link>
           </el-col>
           <el-col :span="8">
-            <router-link to="/home">
+            <router-link to="/exam-record">
               <img class="img" src="../../../static/images/home/icon_function3.jpg">
               <div class="msg-text">考试记录</div>
               <div class="msg-text-detail">查看个人的考试记录、批改状态</div>

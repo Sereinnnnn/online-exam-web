@@ -59,6 +59,11 @@ export const constantRouterMap = [
         path: '/incorrect-answer',
         name: 'incorrect-answer',
         component: () => import('@/views/exam/incorrectAnswer')
+      },
+      {
+        path: '/exam-record',
+        name: 'exam-record',
+        component: () => import('@/views/exam/examRecord')
       }
     ]
   },
