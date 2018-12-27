@@ -165,7 +165,7 @@ export default {
       }).then(() => {
         // 创建考试记录
         addObj(this.tempExamRecord).then(response => {
-          this.tempExamRecord = response.data
+          this.tempExamRecord = response.data.data
           // 加载考试信息
           this.getExamInfo(examinationId)
         })
@@ -230,6 +230,7 @@ export default {
           courseId: '',
           subjectId: this.tempSubject.id
         }
+        debugger
         this.getAnswerList(query)
       }).catch(() => {
         this.$notify({

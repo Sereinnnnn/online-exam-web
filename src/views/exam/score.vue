@@ -38,7 +38,7 @@ export default {
   created () {
     this.query = {
       userId: this.$route.query.userId,
-      examinationId: this.$route.query.examinationId
+      examinationId: this.$route.query.examinationId,
       examRecordId: this.$route.query.examRecordId
     }
     this.getScoreList(this.query)
