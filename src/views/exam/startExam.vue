@@ -226,6 +226,7 @@ export default {
         let query = {
           userId: this.userInfo.id,
           examinationId: this.exam.id,
+          examRecordId: this.tempExamRecord.id,
           courseId: '',
           subjectId: this.tempSubject.id
         }
@@ -272,6 +273,7 @@ export default {
       let query = {
         userId: this.userInfo.id,
         examinationId: this.exam.id,
+        examRecordId: this.tempExamRecord.id,
         courseId: '',
         subjectId: this.tempSubject.id
       }
@@ -295,6 +297,7 @@ export default {
         id: this.tempAnswer.id,
         userId: this.userInfo.id,
         examinationId: this.exam.id,
+        examRecordId: this.tempExamRecord.id,
         subjectId: this.tempSubject.id,
         answer: this.option
       }
@@ -310,6 +313,7 @@ export default {
       let query = {
         userId: this.userInfo.id,
         examinationId: this.exam.id,
+        examRecordId: this.tempExamRecord.id,
         courseId: '',
         subjectId: this.tempSubject.id
       }
@@ -338,6 +342,7 @@ export default {
           id: this.tempAnswer.id,
           userId: this.userInfo.id,
           examinationId: this.exam.id,
+          examRecordId: this.tempExamRecord.id,
           subjectId: this.tempSubject.id,
           answer: this.option
         }
@@ -357,14 +362,14 @@ export default {
     },
     // 提交考试
     submitExam (answer) {
-      submit({ examinationId: answer.examinationId, userId: answer.userId }).then(response => {
+      submit({ examinationId: answer.examinationId, examRecordId: this.tempExamRecord.id, userId: answer.userId }).then(response => {
         this.$notify({
           title: '提示',
           message: '提交成功',
           type: 'success',
           duration: 2000
         })
-        this.$router.push({name: 'score', query: { examinationId: answer.examinationId, userId: answer.userId }})
+        this.$router.push({name: 'score', query: { examinationId: answer.examinationId, examRecordId: this.tempExamRecord.id, userId: answer.userId }})
       }).catch(() => {
         this.$notify({
           title: '提示',
@@ -380,6 +385,7 @@ export default {
         id: '',
         userId: '',
         examinationId: '',
+        examRecordId: this.tempExamRecord.id,
         courseId: '',
         subjectId: '',
         answer: ''

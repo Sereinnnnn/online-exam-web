@@ -43,6 +43,7 @@ export default {
       incorrectAnswerList: [],
       query: {
         examinationId: '',
+        examRecordId: '',
         userId: ''
       }
     }
@@ -56,7 +57,8 @@ export default {
   created () {
     this.query = {
       userId: this.$route.query.userId,
-      examinationId: this.$route.query.examinationId
+      examinationId: this.$route.query.examinationId,
+      examRecordId: this.$route.query.examRecordId
     }
     this.getList(this.query)
   },

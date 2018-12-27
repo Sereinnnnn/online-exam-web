@@ -39,6 +39,7 @@ export default {
     this.query = {
       userId: this.$route.query.userId,
       examinationId: this.$route.query.examinationId
+      examRecordId: this.$route.query.examRecordId
     }
     this.getScoreList(this.query)
   },
@@ -59,7 +60,7 @@ export default {
       })
     },
     incorrectAnswer () {
-      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId}})
+      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId, examRecordId: this.tempExamRecord.id}})
     }
   }
 }
