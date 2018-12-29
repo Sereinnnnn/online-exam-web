@@ -7,3 +7,11 @@ export function getScoreList(query) {
     params: query
   })
 }
+
+export function getScore(query) {
+  return request({
+    url: '/exam/score/score',
+    method: 'get',
+    params: query
+  })
+}

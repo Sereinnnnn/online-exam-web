@@ -6,7 +6,7 @@
           <div class="subject-exam-title" >{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
           <div class="subject-content">
             <div class="subject-title">
-              <span class="subject-title-number">{{subjectIndex + 1}} .</span>
+              <span class="subject-title-number">{{subjectIndex}} .</span>
               {{tempSubject.subjectName}}（{{tempSubject.score}}分）
             </div>
             <div class="subject-option">
@@ -24,8 +24,8 @@
           </div>
           <div class="subject-buttons">
             <el-button plain @click="last">上一题</el-button>
-            <el-button v-if="subjectIndex + 1 !== subjectList.length" plain @click="next">下一题</el-button>
-            <el-button v-if="subjectIndex !== 0 && subjectIndex + 1 === subjectList.length" type="success" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
+            <el-button v-if="subjectIndex !== subjectList.length" plain @click="next">下一题</el-button>
+            <el-button v-if="subjectIndex !== 0 && subjectIndex === subjectList.length" type="success" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
           </div>
         </el-card>
       </el-col>
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="current-progress">
-          当前进度: {{subjectIndex + 1}}/{{subjectList.length}}
+          当前进度: {{subjectIndex}}/{{subjectList.length}}
         </div>
         <div class="answer-card">
           <el-button type="text" icon="el-icon-date" @click="answerCard">答题卡</el-button>
@@ -50,7 +50,7 @@
       <div class="answer-card-title" >{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
       <div class="answer-card-split"></div>
       <el-row class="answer-card-content">
-        <el-button circle v-for="(subject, index) in subjectList" :key="subject.id" @click="toSubject(subject, index)">&nbsp;{{index + 1}}&nbsp;</el-button>
+        <el-button circle v-for="(subject, index) in subjectList" :key="subject.id" @click="toSubject(subject, index + 1)">&nbsp;{{index + 1}}&nbsp;</el-button>
       </el-row>
     </el-dialog>
   </div>
@@ -70,7 +70,7 @@ export default {
     return {
       loading: true,
       subjectList: [],
-      subjectIndex: 0,
+      subjectIndex: 1,
       currentTime: 0,
       startTime: 0,
       endTime: 0,
@@ -221,7 +221,7 @@ export default {
     getSubjectList (query) {
       fetchSubjectList(query).then(response => {
         this.subjectList = response.data.list
-        this.tempSubject = this.subjectList[this.subjectIndex]
+        this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
         // 加载答题
         let query = {
           userId: this.userInfo.id,
@@ -230,7 +230,6 @@ export default {
           courseId: '',
           subjectId: this.tempSubject.id
         }
-        debugger
         this.getAnswerList(query)
       }).catch(() => {
         this.$notify({
@@ -257,7 +256,7 @@ export default {
     },
     // 上一题
     last () {
-      if (this.subjectIndex === 0) {
+      if (this.subjectIndex === 1) {
         this.$notify({
           title: '提示',
           message: '已经是第一题了',
@@ -269,7 +268,7 @@ export default {
       this.loading = true
       // 先回退题目
       this.subjectIndex--
-      this.tempSubject = this.subjectList[this.subjectIndex]
+      this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
       // 查找答题
       let query = {
         userId: this.userInfo.id,
@@ -283,7 +282,7 @@ export default {
     },
     // 下一题
     next () {
-      if (this.subjectIndex + 1 === this.subjectList.length) {
+      if (this.subjectIndex === this.subjectList.length) {
         this.$notify({
           title: '提示',
           message: '已经是最后一题了',
@@ -309,7 +308,7 @@ export default {
       })
       this.option = ''
       this.subjectIndex++
-      this.tempSubject = this.subjectList[this.subjectIndex]
+      this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
       // 加载答题
       let query = {
         userId: this.userInfo.id,
@@ -320,6 +319,14 @@ export default {
       }
       this.getAnswerList(query)
       this.loading = false
+    },
+    // 根据序号查询题目
+    getSubjectBySerialNumber (serialNumber) {
+      for (let i = 0; i < this.subjectList.length; i++) {
+        if (parseInt(this.subjectList[i].serialNumber) === serialNumber) {
+          return this.subjectList[i]
+        }
+      }
     },
     // 答题卡
     answerCard () {

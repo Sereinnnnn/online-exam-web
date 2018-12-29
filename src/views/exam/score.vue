@@ -19,12 +19,14 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getScoreList } from '@/api/exam/score'
+import { getScore } from '@/api/exam/score'
 export default {
   data () {
     return {
       score: {
-        score: ''
+        score: '',
+        correctNumber: '',
+        inCorrectNumber: ''
       },
       query: {}
     }
@@ -45,10 +47,11 @@ export default {
   },
   methods: {
     getScoreList (query) {
-      getScoreList(query).then(response => {
-        let scoreList = response.data.list
-        if (scoreList.length > 0) {
-          this.score = scoreList[0]
+      getScore(query).then(response => {
+        if (response.data.data.id === null) {
+          this.resetScore()
+        } else {
+          this.score = response.data.data
         }
       }).catch(() => {
         this.$notify({
@@ -60,7 +63,24 @@ export default {
       })
     },
     incorrectAnswer () {
-      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId, examRecordId: this.tempExamRecord.id}})
+      debugger
+      if (this.score.id === undefined) {
+        this.$notify({
+          title: '提示',
+          message: '无考试成绩',
+          type: 'warn',
+          duration: 2000
+        })
+        return
+      }
+      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId, examRecordId: this.query.examRecordId}})
+    },
+    resetScore () {
+      this.score = {
+        score: '0',
+        correctNumber: '0',
+        inCorrectNumber: '0'
+      }
     }
   }
 }

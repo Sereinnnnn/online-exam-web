@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="18" :offset="3">
         <el-card class="incorrect-answer-gray-box">
-          <div class="subject-content" v-for="(tempSubject, index) in incorrectAnswerList" :key="tempSubject.id">
+          <div class="subject-content" v-for="tempSubject in incorrectAnswerList" :key="tempSubject.id">
             <div class="subject-content-option">
               <div class="subject-title">
-                <span class="subject-title-number">{{index + 1}} .</span>
+                <span class="subject-title-number">{{tempSubject.serialNumber}} .</span>
                 {{tempSubject.subjectName}}（{{tempSubject.score}}分）
               </div>
               <div class="subject-option" :class="getClass(tempSubject.answer, tempSubject.incorrectAnswer, 'A')">
@@ -29,6 +29,7 @@
               解析：{{tempSubject.analysis}}
             </p>
           </div>
+          <div v-if="incorrectAnswerList.length === 0" style="text-align: center">暂无更多数据</div>
         </el-card>
       </el-col>
     </el-row>
@@ -44,7 +45,9 @@ export default {
       query: {
         examinationId: '',
         examRecordId: '',
-        userId: ''
+        userId: '',
+        sort: 'serial_number',
+        order: ' asc'
       }
     }
   },
@@ -55,11 +58,9 @@ export default {
     })
   },
   created () {
-    this.query = {
-      userId: this.$route.query.userId,
-      examinationId: this.$route.query.examinationId,
-      examRecordId: this.$route.query.examRecordId
-    }
+    this.query.userId = this.$route.query.userId
+    this.query.examinationId = this.$route.query.examinationId
+    this.query.examRecordId = this.$route.query.examRecordId
     this.getList(this.query)
   },
   methods: {
@@ -96,6 +97,7 @@ export default {
     @extend .gray-box;
     margin-top: 50px;
     margin-bottom: 50px;
+    min-height: 200px;
   }
   .incorrect-answer-gray-box-title {
     text-align: center;
