@@ -49,10 +49,10 @@
             </router-link>
           </el-col>
           <el-col :span="8">
-            <router-link to="/home">
+            <router-link to="/knowledge">
               <img class="img" src="../../../static/images/home/icon_function6.jpg">
-              <div class="msg-text">自动评分</div>
-              <div class="msg-text-detail">自动评分,正确率</div>
+              <div class="msg-text">知识库</div>
+              <div class="msg-text-detail">下载学习资料</div>
             </router-link>
           </el-col>
         </el-row>
