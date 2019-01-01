@@ -8,7 +8,7 @@
     <el-row :gutter="100">
       <el-col :span="6" v-for="(exam, index) in examList" :key="exam.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
         <el-card :body-style="{ padding: '12px' }">
-          <img src="../../../static/images/home/icon_scenes4.jpg" class="exam-image">
+          <img src="../../../static/images/home/icon_function3.jpg" class="exam-image">
           <div style="padding: 14px;">
             <span>{{ exam.examinationName }}</span>
             <div class="exam-bottom">
@@ -30,21 +30,24 @@ export default {
   data () {
     return {
       examList: [],
-      courseId: ''
+      query: {
+        courseId: '',
+        status: '0'
+      }
     }
   },
   created () {
     let courseId = this.$route.query.courseId
     if (courseId !== undefined && courseId !== null) {
-      this.courseId = courseId
+      this.query.courseId = courseId
     }
     // 加载考试列表
-    this.getExamList({courseId: this.courseId})
+    this.getExamList()
   },
   methods: {
     // 加载考试列表
-    getExamList (query) {
-      fetchList(query).then(response => {
+    getExamList () {
+      fetchList(this.query).then(response => {
         this.examList = response.data.list
       }).catch(() => {
         this.$notify({

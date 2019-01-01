@@ -29,14 +29,14 @@
               <span>{{ scope.row.type | typeFilter }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="考试时间" sortable prop="exam_time" min-width="90" align="center">
+          <el-table-column label="开始时间" sortable prop="start_time" min-width="90" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.examTime }}</span>
+              <span>{{ scope.row.startTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="试卷总分" sortable prop="total_score" align="center" width="120px">
+          <el-table-column label="结束时间" sortable prop="end_time" min-width="90" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.totalScope }}</span>
+              <span>{{ scope.row.endTime }}</span>
             </template>
           </el-table-column>
           <el-table-column label="成绩" sortable prop="score" align="center" width="120px">
