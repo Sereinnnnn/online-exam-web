@@ -1,4 +1,4 @@
-import {loginByUsername, logout, getUserInfo} from '@/api/admin/login'
+import {loginByUsername, registerByUsername, logout, getUserInfo} from '@/api/admin/login'
 import {setToken, removeToken} from '@/utils/auth'
 import {setStore, getStore} from '@/utils/store'
 import {encryption} from '@/utils/util'
@@ -42,6 +42,17 @@ const user = {
           setToken(data.access_token)
           commit('SET_ACCESS_TOKEN', data.access_token)
           commit('SET_REFRESH_TOKEN', data.refresh_token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    RegisterByUsername ({ commit, state, dispatch }, userInfo) {
+      return new Promise((resolve, reject) => {
+        registerByUsername(userInfo).then(response => {
+          const data = response.data
+          console.log(data)
           resolve()
         }).catch(error => {
           reject(error)

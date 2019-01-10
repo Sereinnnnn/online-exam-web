@@ -13,6 +13,14 @@ export function loginByUsername (username, password, code, randomStr) {
   })
 }
 
+export function registerByUsername (obj) {
+  return request({
+    url: '/admin/user/register',
+    method: 'post',
+    data: obj
+  })
+}
+
 export function logout (accesstoken, refreshToken) {
   return request({
     url: '/auth/authentication/removeToken',
