@@ -5,7 +5,7 @@
         <h1>所有课程</h1>
       </el-col>
     </el-row>
-    <el-row :gutter="100">
+    <el-row :gutter="100" v-loading="listLoading">
       <el-col :span="6" v-for="(course, index) in courseList" :key="course.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
         <el-card :body-style="{ padding: '12px' }">
           <img src="../../../static/images/home/icon_function1.jpg" class="course-image">
@@ -18,6 +18,9 @@
           </div>
         </el-card>
       </el-col>
+      <el-col v-if="!listLoading && courseList.length === 0" :span="24">
+        <p class="exam-empty">暂无更多数据</p>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -26,6 +29,7 @@ import { courseList } from '@/api/exam/course'
 export default {
   data () {
     return {
+      listLoading: true,
       courseList: []
     }
   },
@@ -35,8 +39,10 @@ export default {
   methods: {
     // 加载课程列表
     getCourseList () {
+      this.listLoading = true
       courseList().then(response => {
         this.courseList = response.data.list
+        this.listLoading = false
       })
     },
     // 加载考试类表

@@ -63,7 +63,6 @@ export default {
       })
     },
     incorrectAnswer () {
-      debugger
       if (this.score.id === undefined) {
         this.$notify({
           title: '提示',

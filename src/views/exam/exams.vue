@@ -5,7 +5,7 @@
         <h1>所有考试</h1>
       </el-col>
     </el-row>
-    <el-row :gutter="100">
+    <el-row :gutter="100" v-loading="listLoading">
       <el-col :span="6" v-for="(exam, index) in examList" :key="exam.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
         <el-card :body-style="{ padding: '12px' }">
           <img src="../../../static/images/home/icon_function3.jpg" class="exam-image">
@@ -18,7 +18,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col v-if="examList.length === 0" :span="24">
+      <el-col v-if="!listLoading && examList.length === 0" :span="24">
         <p class="exam-empty">暂无更多数据</p>
       </el-col>
     </el-row>
@@ -29,6 +29,7 @@ import { fetchList } from '@/api/exam/exam'
 export default {
   data () {
     return {
+      listLoading: true,
       examList: [],
       query: {
         courseId: '',
@@ -47,8 +48,10 @@ export default {
   methods: {
     // 加载考试列表
     getExamList () {
+      this.listLoading = true
       fetchList(this.query).then(response => {
         this.examList = response.data.list
+        this.listLoading = false
       }).catch(() => {
         this.$notify({
           title: '失败',
@@ -56,6 +59,7 @@ export default {
           type: 'error',
           duration: 2000
         })
+        this.listLoading = false
       })
     },
     // 开始考试

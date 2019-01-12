@@ -26,7 +26,17 @@
           </el-table-column>
           <el-table-column label="大小" min-width="90" align="center">
             <template slot-scope="scope">
-              <span>{{ parseInt(scope.row.attachSize) / 1000 }}M</span>
+              <span>{{ scope.row.attachSize | attachSizeFilter }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="上传时间" min-width="90" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.createDate }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="上传者" min-width="90" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.creator }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="90" align="center">
@@ -45,6 +55,26 @@
 <script>
 import { fetchKnowledgeList } from '@/api/exam/knowledge'
 export default {
+  filters: {
+    attachSizeFilter (attachSize) {
+      attachSize = parseInt(attachSize)
+      // kb
+      attachSize = attachSize / 1024
+      // 少于100kb，单位用kb
+      if (attachSize < 100) {
+        return attachSize + 'kb'
+      } else {
+        // mb
+        attachSize = attachSize / 1024
+      }
+      attachSize = attachSize + ''
+      if (attachSize.length > 5) {
+        attachSize = attachSize.substring(0, 4)
+      }
+      attachSize = attachSize + 'M'
+      return attachSize
+    }
+  },
   data () {
     return {
       knowledgeList: [],

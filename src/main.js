@@ -7,6 +7,7 @@ import router from './router'
 import store from './store'
 import './permission' // 权限控制
 import 'element-ui/lib/theme-chalk/index.css'
+import './icons' // icon
 
 Vue.config.productionTip = false
 

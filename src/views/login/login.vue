@@ -166,6 +166,7 @@ export default {
         if (valid) {
           this.register.loading = true
           this.$store.dispatch('RegisterByUsername', this.register.form).then(() => {
+            debugger
             this.register.loading = false
             this.$router.push({ path: '/login' })
           }).catch(() => {

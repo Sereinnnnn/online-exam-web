@@ -3,8 +3,8 @@
     <el-row :gutter="30">
       <el-col :span="18" :offset="2">
         <el-card class="subject-box-card" v-loading="loading">
-          <div class="subject-exam-title" >{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
-          <div class="subject-content">
+          <div class="subject-exam-title" v-if="!loading && tempSubject.id !== ''">{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
+          <div class="subject-content" v-if="!loading && tempSubject.id !== ''">
             <div class="subject-title">
               <span class="subject-title-number">{{subjectIndex}} .</span>
               {{tempSubject.subjectName}}（{{tempSubject.score}}分）
@@ -22,7 +22,7 @@
               <el-radio v-model="option" label="D">D. {{tempSubject.optionD}}</el-radio>
             </div>
           </div>
-          <div class="subject-buttons">
+          <div class="subject-buttons" v-if="!loading && tempSubject.id !== ''">
             <el-button plain @click="last">上一题</el-button>
             <el-button v-if="subjectIndex !== subjectList.length" plain @click="next">下一题</el-button>
             <el-button v-if="subjectIndex !== 0 && subjectIndex === subjectList.length" type="success" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
@@ -170,7 +170,7 @@ export default {
           this.getExamInfo(examinationId)
         })
       }).catch(() => {
-        this.$router.push({name: 'home'})
+        this.$router.push({name: 'exams'})
       })
     },
     // 考试结束
@@ -182,6 +182,7 @@ export default {
         duration: 2000
       })
       this.disableSubmit = true
+      this.loading = false
     },
     // 加载考试信息
     getExamInfo (examinationId) {
@@ -215,6 +216,7 @@ export default {
           type: 'error',
           duration: 2000
         })
+        this.loading = false
       })
     },
     // 加载题目
@@ -238,6 +240,7 @@ export default {
           type: 'error',
           duration: 2000
         })
+        this.loading = false
       })
     },
     // 加载答题

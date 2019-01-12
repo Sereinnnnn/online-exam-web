@@ -2,7 +2,7 @@
   <div>
     <!--主页介绍 -->
     <div id="home">
-      <img id="bg" src="../../../static/images/home/index_bg.jpg" alt="方便好用的考试平台">
+      <img id="bg" src="../../../static/images/home/index.png" alt="方便好用的考试平台">
       <div id="home-msg">方便好用的考试平台</div>
       <router-link to="/register" title="免费注册" class="register-now">免费注册</router-link>
     </div>
@@ -123,4 +123,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" rel="stylesheet/scss" scoped>
+  #home {
+    height: 500px;
+  }
 </style>

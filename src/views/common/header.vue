@@ -37,26 +37,29 @@
             </div>
             <el-button v-if="!login" type="primary" plain size="medium" class="login-button" @click="handleRegister">注册</el-button>
             <el-button v-if="!login" size="medium" plain class="login-button" @click="handleLogin">登录</el-button>
-            <div v-if="login" class="nav-aside" ref="aside">
-              <div class="user pr">
-                <router-link to="/user">个人中心</router-link>
-                <div class="nav-user-wrapper pa" v-if="login">
-                  <div class="nav-user-list">
-                    <ul>
-                      <li class="nav-user-avatar">
-                        <div>
-                          <img class="avatar" :src="userInfo.avatar">
-                        </div>
-                        <p class="name">{{userInfo.username}}</p>
-                      </li>
-                      <li>
-                        <router-link to="/user/infor">账号资料</router-link>
-                      </li>
-                      <li>
-                        <a href="javascript:void(-1);" @click="logOut">退出</a>
-                      </li>
-                    </ul>
-                  </div>
+            <div v-if="login">
+              <div>
+                <img class="avatar" :src="userInfo.avatar">
+              </div>
+            </div>
+            <div class="username" v-if="login">
+              <router-link to="/user">
+                {{userInfo.username}}
+              </router-link>
+              <i class="el-icon-caret-bottom"></i>
+              <div class="nav-user-wrapper">
+                <div class="nav-user-list">
+                  <ul>
+                    <li>
+                      <router-link to="/user/info">个人中心</router-link>
+                    </li>
+                    <li>
+                      <router-link to="/user/info">账号设置</router-link>
+                    </li>
+                    <li>
+                      <a href="javascript:void(-1);" @click="logOut">退出</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -152,6 +155,7 @@ export default {
     logOut () {
       this.login = false
       this.$store.dispatch('LogOut').then(() => {})
+      this.$router.push('/home')
     },
     // 检测登录
     checkLogin () {
@@ -214,139 +218,8 @@ export default {
         margin-left: -10px;
       }
     }
-    .nav-aside {
-      position: relative;
-      &:before {
-        background: #333;
-        background: hsla(0, 0%, 100%, .2);
-        content: " ";
-        @include wh(1px, 13px);
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        left: 0;
-      }
-      &.fixed {
-        width: 262px;
-        position: fixed;
-        left: 50%;
-        margin-left: 451px;
-        margin-top: 0;
-        z-index: 32;
-        top: -40px;
-        -webkit-transform: translate3d(0, 59px, 0);
-        transform: translate3d(0, 59px, 0);
-        -webkit-transition: -webkit-transform .3s cubic-bezier(.165, .84, .44, 1);
-        transition: transform .3s cubic-bezier(.165, .84, .44, 1);
-        .user {
-          &:hover {
-            a:before {
-              background-position: -215px 0;
-            }
-          }
-        }
-      }
-    }
     .right-box {
       display: flex;
-    }
-    .nav-aside {
-      display: flex;
-      align-items: center;
-    }
-    .user {
-      margin-left: 41px;
-      width: 36px;
-      &:hover {
-        a:before {
-          background-position: -5px 0;
-        }
-        .nav-user-wrapper {
-          top: 18px;
-          visibility: visible;
-          opacity: 1;
-          -webkit-transition: opacity .15s ease-out;
-          transition: opacity .15s ease-out;
-        }
-      }
-      > a {
-        position: relative;
-        @include wh(36px, 20px);
-        display: block;
-        text-indent: -9999px;
-        &:before {
-          content: " ";
-          position: absolute;
-          left: 8px;
-          top: 0;
-          @include wh(20px);
-          background: url(/static/images/home/account-icon.png) -155px 0;
-          background-size: 240px 107px;
-          transition: none;
-        }
-
-      }
-      li + li {
-        text-align: center;
-        position: relative;
-        border-top: 1px solid #f5f5f5;
-        line-height: 44px;
-        height: 44px;
-        color: #616161;
-        font-size: 12px;
-        &:hover {
-          background: #fafafa;
-        }
-        a {
-          display: block;
-          color: #616161;
-        }
-      }
-      .nav-user-avatar {
-        list-style: none;
-        > div {
-          position: relative;
-          margin: 0 auto 8px;
-          @include wh(46px);
-          text-align: center;
-          &:before {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border-radius: 50%;
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
-          }
-          .avatar {
-            border-radius: 50%;
-            display: block;
-            @include wh(100%);
-            background-repeat: no-repeat;
-            background-size: contain;
-            cursor: pointer;
-          }
-        }
-        .name {
-          margin-bottom: 16px;
-          font-size: 12px;
-          line-height: 1.5;
-          text-align: center;
-          color: #757575;
-        }
-      }
-      .nav-user-wrapper {
-        width: 168px;
-        transform: translate(-50%);
-        left: 50%;
-      }
-      .nav-user-list {
-        width: 168px;
-        &:before {
-          left: 50%;
-        }
-      }
     }
   }
   // 用户信息弹出
@@ -365,16 +238,7 @@ export default {
       border-radius: 8px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
       z-index: 10;
-      &:before {
-        position: absolute;
-        content: " ";
-        background: url(/static/images/home/account-icon.png) no-repeat -49px -43px;
-        background-size: 240px 107px;
-        @include wh(20px, 8px);
-        top: -8px;
-        margin-left: -10px;
-      }
-      li + li {
+      li {
         list-style: none;
       }
     }
@@ -401,5 +265,88 @@ export default {
   /* 注册登录按钮 */
   .login-button {
     margin: 10px;
+  }
+
+  /* 头像 */
+  .avatar {
+    border-radius: 50%;
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  .username {
+    padding: 8px;
+    color: rgb(134, 134, 134);
+    position: relative;
+    ul {
+      padding: 10px;
+    }
+    &.fixed {
+      width: 262px;
+      position: fixed;
+      left: 50%;
+      margin-left: 451px;
+      margin-top: 0;
+      z-index: 32;
+      top: -40px;
+      -webkit-transform: translate3d(0, 59px, 0);
+      transform: translate3d(0, 59px, 0);
+      -webkit-transition: -webkit-transform .3s cubic-bezier(.165, .84, .44, 1);
+      transition: transform .3s cubic-bezier(.165, .84, .44, 1);
+      .user {
+        &:hover {
+          a:before {
+            background-position: -215px 0;
+          }
+        }
+      }
+    }
+    .nav-user-wrapper {
+      width: 168px;
+      transform: translate(-50%);
+      left: 50%;
+    }
+    .nav-user-list {
+      width: 168px;
+      &:before {
+        left: 50%;
+      }
+    }
+    &:hover {
+      a:before {
+        background-position: -5px 0;
+      }
+      .nav-user-wrapper {
+        top: 30px;
+        visibility: visible;
+        opacity: 1;
+        -webkit-transition: opacity .15s ease-out;
+        transition: opacity .15s ease-out;
+      }
+    }
+    > a {
+      position: relative;
+    }
+    li {
+      list-style: none;
+      text-align: center;
+      position: relative;
+      border-top: 1px solid #f5f5f5;
+      line-height: 44px;
+      height: 44px;
+      color: #616161;
+      font-size: 12px;
+      &:hover {
+        background: #fafafa;
+      }
+      a {
+        display: block;
+        color: #616161;
+      }
+    }
   }
 </style>
