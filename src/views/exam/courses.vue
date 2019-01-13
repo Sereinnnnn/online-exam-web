@@ -2,26 +2,37 @@
   <div>
     <el-row class="course-msg">
       <el-col :span="24" style="color: black;">
-        <h1>所有课程</h1>
+        <h1>在线学习</h1>
       </el-col>
     </el-row>
-    <el-row :gutter="100" v-loading="listLoading">
-      <el-col :span="6" v-for="(course, index) in courseList" :key="course.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
-        <el-card :body-style="{ padding: '12px' }">
-          <img src="../../../static/images/home/icon_function1.jpg" class="course-image">
-          <div style="padding: 14px;">
-            <span>{{ course.courseName }}</span>
-            <div class="course-bottom">
-              <time class="course-time">{{ course.createDate }}</time>
-              <el-button type="text" class="course-button" @click="getExamList(course)">查看考试</el-button>
+    <div class="courses" v-loading="listLoading">
+      <el-row v-for="course in courseList" :key="course.id">
+        <el-col :offset="8">
+          <div class="course">
+            <a href="javascript:void(0);" class="course-title">
+              <img :src="course.avatar" v-if="course.avatar !== undefined" class="course-image">
+              <img src="../../../static/images/practices/practice.png" v-else class="course-image">
+              <p>
+                <span class="course-name">{{course.courseName}}</span>
+              </p>
+            </a>
+            <div style="padding: 14px;" class="course-right">
+              <h4>
+                <label>{{course.courseName}}<span>客观题练习</span></label>
+              </h4>
+              <p>{{ course.courseDescription }}</p>
+              <div class="course-details">
+                <label><span>{{course.peoples}}</span>5人在学习</label>
+              </div>
+              <el-button type="success">开始练习</el-button>
             </div>
           </div>
-        </el-card>
-      </el-col>
+        </el-col>
+      </el-row>
       <el-col v-if="!listLoading && courseList.length === 0" :span="24">
         <p class="exam-empty">暂无更多数据</p>
       </el-col>
-    </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -59,24 +70,42 @@ export default {
   .course-msg {
     @extend %message-common;
   }
-  .course-image {
-    width: 100%;
-    display: block;
-    cursor: pointer;
+  .course {
+    margin-top: 50px;
+    padding-bottom: 50px;
+    .course-title {
+      float: left;
+      position: relative;
+      .course-name {
+        border-bottom: 2px solid #fff;
+      }
+      span {
+        display: block;
+        line-height: 53px;
+      }
+    }
+    .course-right {
+      margin-left: 470px;
+    }
+    .course-right p {
+      font-size: 14px;
+      color: #848484;
+      line-height: 24px;
+      margin: 28px 0;
+      min-height: 70px;
+    }
+    .course-details label {
+      font-size: 14px;
+      color: #17b7f2;
+      margin-right: 50px;
+    }
+    .course-image {
+      width: 100%;
+      display: block;
+      cursor: pointer;
+    }
   }
-  .el-col {
-    margin-bottom: 40px;
-  }
-  .course-bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-  .course-button {
-    padding: 0;
-    float: right;
-  }
-  .course-time {
-    font-size: 13px;
-    color: #999;
+  .exam-empty {
+    text-align: center;
   }
 </style>

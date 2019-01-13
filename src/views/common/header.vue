@@ -43,9 +43,9 @@
               </div>
             </div>
             <div class="username" v-if="login">
-              <router-link to="/user">
+              <a href="javascript:void(-1);">
                 {{userInfo.username}}
-              </router-link>
+              </a>
               <i class="el-icon-caret-bottom"></i>
               <div class="nav-user-wrapper">
                 <div class="nav-user-list">
