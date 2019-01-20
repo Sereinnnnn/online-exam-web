@@ -20,6 +20,7 @@
 <script>
 import { mapState } from 'vuex'
 import { getScore } from '@/api/exam/score'
+
 export default {
   data () {
     return {
@@ -28,21 +29,25 @@ export default {
         correctNumber: '',
         inCorrectNumber: ''
       },
-      query: {}
+      query: {
+        userId: '',
+        examinationId: '',
+        examRecordId: ''
+      }
     }
   },
   computed: {
     // 获取用户信息
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      exam: state => state.exam.exam,
+      examRecord: state => state.exam.examRecord
     })
   },
   created () {
-    this.query = {
-      userId: this.$route.query.userId,
-      examinationId: this.$route.query.examinationId,
-      examRecordId: this.$route.query.examRecordId
-    }
+    this.query.userId = this.userInfo.id
+    this.query.examinationId = this.exam.id
+    this.query.examRecordId = this.examRecord.id
     this.getScoreList(this.query)
   },
   methods: {

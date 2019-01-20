@@ -41,9 +41,6 @@ const exam = {
     SubmitExam ({ commit, state }, exam) {
       return new Promise((resolve, reject) => {
         submit(exam).then(response => {
-          // 清空考试记录和考试信息
-          commit('SET_EXAM_RECORD', '')
-          commit('SET_EXAM', '')
           resolve(response)
         }).catch(error => {
           reject(error)

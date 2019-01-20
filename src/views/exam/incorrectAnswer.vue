@@ -54,13 +54,15 @@ export default {
   computed: {
     // 获取用户信息
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      exam: state => state.exam.exam,
+      examRecord: state => state.exam.examRecord
     })
   },
   created () {
-    this.query.userId = this.$route.query.userId
-    this.query.examinationId = this.$route.query.examinationId
-    this.query.examRecordId = this.$route.query.examRecordId
+    this.query.userId = this.userInfo.id
+    this.query.examinationId = this.exam.id
+    this.query.examRecordId = this.examRecord.id
     this.getList(this.query)
   },
   methods: {
