@@ -24,7 +24,7 @@
               <div class="practice-details">
                 <label><span>{{practice.peoples}}</span>5人在学习</label>
               </div>
-              <el-button type="success">开始练习</el-button>
+              <el-button type="success" @click="startPractice(practice)">开始练习</el-button>
             </div>
           </div>
         </el-col>
@@ -37,7 +37,7 @@
 </template>
 <script>
 import { fetchList } from '@/api/exam/exam'
-import { ATTACHMENT_URL } from '@/config/attachment'
+import { getDownloadUrl } from '@/utils/util'
 
 export default {
   data () {
@@ -66,7 +66,11 @@ export default {
       this.$router.push({name: 'exams', query: {practiceId: practice.id}})
     },
     getAvatar (attachmentId) {
-      return ATTACHMENT_URL + '/download?id=' + attachmentId
+      return getDownloadUrl(attachmentId)
+    },
+    // 开始练习
+    startPractice (practice) {
+      this.$router.push({name: 'practice', query: {examinationId: practice.id}})
     }
   }
 }

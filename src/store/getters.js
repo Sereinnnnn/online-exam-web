@@ -16,6 +16,7 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   menu: state => state.user.menu,
   isCollapse: state => state.common.isCollapse,
-  errorLogs: state => state.errorLog.logs
+  exam: state => state.exam.exam,
+  examRecord: state => state.exam.examRecord
 }
 export default getters

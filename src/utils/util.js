@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js'
+import { ATTACHMENT_URL } from '@/config/attachment'
 
 /**
  * 加密处理
@@ -103,3 +104,11 @@ export const randomLenNum = (len, date) => {
   return random
 }
 
+/**
+ * 获取附件下载地址
+ * @param attachmentId
+ * @returns {string}
+ */
+export const getDownloadUrl = (attachmentId) => {
+  return ATTACHMENT_URL + '/download?id=' + attachmentId
+}

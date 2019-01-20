@@ -58,7 +58,12 @@ import { fetchList } from '@/api/exam/examRecord'
 export default {
   filters: {
     typeFilter (type) {
-      return type === '0' ? '正式考试' : '模拟考试'
+      const typeMap = {
+        0: '正式考试',
+        1: '模拟考试',
+        2: '在线练习'
+      }
+      return typeMap[type]
     }
   },
   data () {

@@ -12,7 +12,7 @@ const whiteList = ['/', '/home', '/functions', '/us', '/register', '/login', '/a
 router.beforeEach((to, from, next) => {
   NProgress.start() // 进度条
   if (getToken()) { // 判断是否已登录
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path === '/register') {
       next({ path: '/' })
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息

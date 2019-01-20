@@ -52,3 +52,11 @@ export function delAllSubject(obj) {
     data: obj
   })
 }
+
+export function getSubjectAnswer(obj) {
+  return request({
+    url: '/exam/subject/subjectAnswer',
+    method: 'get',
+    params: obj
+  })
+}
