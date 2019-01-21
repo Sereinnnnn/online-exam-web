@@ -80,35 +80,48 @@ export default {
     },
     // 开始考试
     startExam (exam) {
-      this.$notify({
-        title: '注意',
-        message: '即将考试：' + exam.examinationName,
-        type: 'warn',
-        duration: 2000
-      })
       this.tempExamRecord.examinationId = exam.id
       this.tempExamRecord.userId = this.userInfo.id
-      // 查询考试信息
-      store.dispatch('GetExamInfo', exam).then(res => {
-        // 创建考试记录
-        store.dispatch('AddExamRecordInfo', this.tempExamRecord).then(res => {
-          this.$router.push({name: 'start'})
-        }).catch((err) => {
-          this.$notify({
-            title: '提示',
-            message: '开始考试失败',
-            type: 'warn',
-            duration: 2000
-          })
-        })
-      }).catch((err) => {
+      // 校验考试时间
+      const currentTime = parseInt(exam.currentTime)
+      // 校验结束时间
+      if (currentTime > parseInt(exam.endTime)) {
         this.$notify({
           title: '提示',
-          message: '获取考试信息失败',
+          message: '考试已结束',
           type: 'warn',
           duration: 2000
         })
-      })
+      } else if (currentTime < parseInt(exam.startTime)) {
+        // 考试未开始
+        this.$notify({
+          title: '提示',
+          message: '考试未开始',
+          type: 'warn',
+          duration: 2000
+        })
+      } else {
+        this.$confirm('确定要开始吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 暂存考试信息
+          store.dispatch('SetExamInfo', exam).then(res => {
+            // 创建考试记录
+            store.dispatch('AddExamRecordInfo', this.tempExamRecord).then(res => {
+              this.$router.push({name: 'start'})
+            }).catch((err) => {
+              this.$notify({
+                title: '提示',
+                message: '开始考试失败',
+                type: 'warn',
+                duration: 2000
+              })
+            })
+          })
+        })
+      }
     },
     getAvatar (attachmentId) {
       return getDownloadUrl(attachmentId)

@@ -25,7 +25,7 @@
           <div class="subject-buttons" v-if="!loading && tempSubject.id !== ''">
             <el-button plain @click="last">上一题</el-button>
             <el-button v-if="tempSubject.serialNumber !== exam.totalSubject" plain @click="next">下一题</el-button>
-            <el-button v-if="tempSubject.serialNumber !== 0 && subjectIndex === exam.totalSubject" type="success" @click="submitExam" v-bind:disabled="disableSubmit">提交</el-button>
+            <el-button v-if="tempSubject.serialNumber !== 0 && tempSubject.serialNumber === exam.totalSubject" type="success" @click="submitExam" v-bind:disabled="disableSubmit">提交</el-button>
           </div>
         </el-card>
       </el-col>
@@ -57,6 +57,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import CountDown from 'vue2-countdown'
 import { getSubjectAnswer } from '@/api/exam/subject'
 import { saveOrUpdate } from '@/api/exam/answer'
@@ -111,9 +112,11 @@ export default {
     // 获取用户信息
     ...mapState({
       userInfo: state => state.user.userInfo,
-      exam: state => state.exam.exam,
       examRecord: state => state.exam.examRecord
-    })
+    }),
+    ...mapGetters([
+      'exam'
+    ])
   },
   created () {
     // 考试ID
@@ -136,36 +139,44 @@ export default {
     },
     // 开始考试
     startExam () {
-      this.$confirm('确定要开始吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      // 查询考试信息
+      store.dispatch('GetExamInfo', this.exam).then(res => {
         // 获取服务器的当前时间
         this.currentTime = parseInt(this.exam.currentTime)
         // 考试开始时间
         this.startTime = parseInt(this.exam.startTime)
+        // 考试结束时间
+        this.endTime = parseInt(this.exam.endTime)
         // 题目数
         this.exam.totalSubject = parseInt(this.exam.totalSubject)
-        // 考试已经考试
-        if (this.startTime < this.currentTime) {
-          this.startTime = this.currentTime
-          // 开启提交按钮
-          this.disableSubmit = false
-        } else {
+        // 校验考试时间
+        if (this.currentTime > this.endTime) {
+          this.$notify({
+            title: '提示',
+            message: '考试已结束',
+            type: 'warn',
+            duration: 2000
+          })
+        } else if (this.currentTime < parseInt(this.exam.startTime)) {
+          // 考试未开始
           this.$notify({
             title: '提示',
             message: '考试未开始',
             type: 'warn',
             duration: 2000
           })
+        } else {
+          this.disableSubmit = false
+          // 加载题目和答题
+          this.getSubjectAndAnswer(this.query)
         }
-        // 考试结束时间
-        this.endTime = parseInt(this.exam.endTime)
-        // 加载题目和答题
-        this.getSubjectAndAnswer(this.query)
-      }).catch(() => {
-        this.$router.push({name: 'exams'})
+      }).catch((err) => {
+        this.$notify({
+          title: '提示',
+          message: '获取考试信息失败',
+          type: 'warn',
+          duration: 2000
+        })
       })
     },
     // 考试结束

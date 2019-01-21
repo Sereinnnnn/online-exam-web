@@ -23,6 +23,10 @@ const exam = {
         })
       })
     },
+    // 设置考试信息
+    SetExamInfo ({ commit, state}, exam) {
+      commit('SET_EXAM', exam)
+    },
     // 新增考试记录
     AddExamRecordInfo ({ commit, state }, examRecord) {
       return new Promise((resolve, reject) => {

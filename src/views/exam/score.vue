@@ -48,6 +48,7 @@ export default {
   },
   created () {
     // 练习或考试
+    this.type = this.$route.query.type
     if (this.type === 'practice') {
       this.query.examinationId = this.practice.id
       this.query.examRecordId = this.practiceRecord.id
@@ -85,7 +86,7 @@ export default {
         })
         return
       }
-      this.$router.push({name: 'incorrect-answer', query: {examinationId: this.query.examinationId, examRecordId: this.query.examRecordId}})
+      this.$router.push({name: 'incorrect-answer', query: {type: this.type}})
     },
     resetScore () {
       this.score = {

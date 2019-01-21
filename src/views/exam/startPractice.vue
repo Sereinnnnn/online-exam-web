@@ -24,8 +24,8 @@
           </div>
           <div class="subject-buttons" v-if="!loading && tempSubject.id !== ''">
             <el-button plain @click="last">上一题</el-button>
-            <el-button v-if="tempSubject.serialNumber !== exam.totalSubject" plain @click="next">下一题</el-button>
-            <el-button v-if="tempSubject.serialNumber !== 0 && tempSubject.serialNumber === exam.totalSubject" type="success" @click="submitPractice" v-bind:disabled="disableSubmit">提交</el-button>
+            <el-button v-if="tempSubject.serialNumber !== practice.totalSubject" plain @click="next">下一题</el-button>
+            <el-button v-if="tempSubject.serialNumber !== 0 && tempSubject.serialNumber === practice.totalSubject" type="success" @click="submitPractice" v-bind:disabled="disableSubmit">提交</el-button>
           </div>
         </el-card>
       </el-col>
@@ -40,7 +40,7 @@
       </el-col>
     </el-row>
     <el-dialog title="答题卡" :visible.sync="dialogVisible" width="50%" top="10vh" center>
-      <div class="answer-card-title" >{{practice.examinationName}}（共{{subjectList.length + 1}}题，合计{{practice.totalScore}}分）</div>
+      <div class="answer-card-title" >{{practice.examinationName}}（共{{practice.totalSubject}}题，合计{{practice.totalScore}}分）</div>
       <div class="answer-card-split"></div>
       <el-row class="answer-card-content">
         <el-button circle v-for="index in practice.totalSubject" :key="index" @click="toSubject(index)">&nbsp;{{index}}&nbsp;</el-button>
