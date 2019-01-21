@@ -3,10 +3,10 @@
     <el-row :gutter="30">
       <el-col :span="18" :offset="2">
         <el-card class="subject-box-card" v-loading="loading">
-          <div class="subject-exam-title" v-if="!loading && tempSubject.id !== ''">{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
+          <div class="subject-exam-title" v-if="!loading && tempSubject.id !== ''">{{practice.examinationName}}（共{{practice.totalSubject}}题，合计{{practice.totalScore}}分）</div>
           <div class="subject-content" v-if="!loading && tempSubject.id !== ''">
             <div class="subject-title">
-              <span class="subject-title-number">{{subjectIndex}} .</span>
+              <span class="subject-title-number">{{tempSubject.serialNumber}} .</span>
               {{tempSubject.subjectName}}（{{tempSubject.score}}分）
             </div>
             <div class="subject-option">
@@ -24,42 +24,40 @@
           </div>
           <div class="subject-buttons" v-if="!loading && tempSubject.id !== ''">
             <el-button plain @click="last">上一题</el-button>
-            <el-button v-if="subjectIndex !== subjectList.length" plain @click="next">下一题</el-button>
-            <el-button v-if="subjectIndex !== 0 && subjectIndex === subjectList.length" type="success" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
+            <el-button v-if="tempSubject.serialNumber !== exam.totalSubject" plain @click="next">下一题</el-button>
+            <el-button v-if="tempSubject.serialNumber !== 0 && tempSubject.serialNumber === exam.totalSubject" type="success" @click="submitPractice" v-bind:disabled="disableSubmit">提交</el-button>
           </div>
         </el-card>
       </el-col>
       <el-col :span="2">
         <div class="current-progress">
-          当前进度: {{subjectIndex}}/{{subjectList.length}}
+          当前进度: {{tempSubject.serialNumber}}/{{practice.totalSubject}}
         </div>
         <div class="answer-card">
           <el-button type="text" icon="el-icon-date" @click="answerCard">答题卡</el-button>
         </div>
-        <el-button type="success" icon="el-icon-date" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
+        <el-button type="success" icon="el-icon-date" @click="submitPractice" v-bind:disabled="disableSubmit">提交</el-button>
       </el-col>
     </el-row>
     <el-dialog title="答题卡" :visible.sync="dialogVisible" width="50%" top="10vh" center>
-      <div class="answer-card-title" >{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
+      <div class="answer-card-title" >{{practice.examinationName}}（共{{subjectList.length + 1}}题，合计{{practice.totalScore}}分）</div>
       <div class="answer-card-split"></div>
       <el-row class="answer-card-content">
-        <el-button circle v-for="(subject, index) in subjectList" :key="subject.id" @click="toSubject(subject, index + 1)">&nbsp;{{index + 1}}&nbsp;</el-button>
+        <el-button circle v-for="index in practice.totalSubject" :key="index" @click="toSubject(index)">&nbsp;{{index}}&nbsp;</el-button>
       </el-row>
     </el-dialog>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getObj } from '@/api/exam/exam'
-import { fetchSubjectList } from '@/api/exam/subject'
-import { saveOrUpdate, fetchAnswerList, submit } from '@/api/exam/answer'
-import { addObj } from '@/api/exam/examRecord'
+import { saveOrUpdate } from '@/api/exam/answer'
+import { getSubjectAnswer } from '@/api/exam/subject'
+import store from '@/store'
+
 export default {
   data () {
     return {
       loading: true,
-      subjectList: [],
-      subjectIndex: 1,
       currentTime: 0,
       startTime: 0,
       endTime: 0,
@@ -81,27 +79,10 @@ export default {
         analysis: '',
         level: 2
       },
-      exam: {
-        id: '',
-        examinationName: '',
-        type: 0,
-        attention: '',
-        startTime: '',
-        endTime: '',
-        duration: '',
-        totalScore: '',
-        status: 0,
-        avatar: '',
-        collegeId: '',
-        majorId: '',
-        course: {
-          id: '',
-          courseName: ''
-        },
-        remark: ''
-      },
       query: {
-        examinationId: ''
+        serialNumber: 1,
+        examRecordId: '',
+        userId: ''
       },
       option: '',
       dialogVisible: false,
@@ -112,92 +93,108 @@ export default {
         courseId: '',
         subjectId: '',
         answer: ''
-      },
-      tempExamRecord: {
-        id: '',
-        userId: '',
-        examinationId: ''
       }
     }
   },
   computed: {
     // 获取用户信息
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      practice: state => state.practice.practice,
+      practiceRecord: state => state.practice.practiceRecord
     })
   },
   created () {
-    let examinationId = this.$route.query.examinationId
-    if (examinationId !== undefined && examinationId !== null) {
-      this.query.examinationId = examinationId
-      this.tempExamRecord.examinationId = examinationId
-      this.tempExamRecord.userId = this.userInfo.id
-    }
+    // 考试ID
+    this.query.examinationId = this.practice.id
+    // 考试记录ID
+    this.query.examRecordId = this.practiceRecord.id
+    // 用户ID
+    this.query.userId = this.userInfo.id
     // 开始练习
-    this.startPractice(this.query.examinationId)
+    this.startPractice()
   },
   methods: {
     // 开始考试
-    startPractice (examinationId) {
+    startPractice () {
       this.$confirm('确定要开始吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 创建考试记录
-        addObj(this.tempExamRecord).then(response => {
-          this.tempExamRecord = response.data.data
-          // 加载考试信息
-          this.getExamInfo(examinationId)
-        })
-      }).catch(() => {
-        this.$router.push({name: 'practices'})
-      })
-    },
-    // 加载考试信息
-    getExamInfo (examinationId) {
-      getObj(examinationId, {timeFormat: true}).then(response => {
-        this.exam = response.data.data
         // 获取服务器的当前时间
-        this.currentTime = parseInt(this.exam.currentTime)
+        this.currentTime = parseInt(this.practice.currentTime)
         // 考试开始时间
-        this.startTime = parseInt(this.exam.startTime)
+        this.startTime = parseInt(this.practice.startTime)
         // 考试已经考试
         this.startTime = this.currentTime
         // 开启提交按钮
         this.disableSubmit = false
         // 考试结束时间
-        this.endTime = parseInt(this.exam.endTime)
-        // 加载题目信息
-        this.getSubjectList(this.query)
+        this.endTime = parseInt(this.practice.endTime)
+        // 加载题目和答题
+        this.getSubjectAndAnswer(this.query)
       }).catch(() => {
-        this.$notify({
-          title: '失败',
-          message: '加载考试失败',
-          type: 'error',
-          duration: 2000
-        })
-        this.loading = false
+        this.$router.push({name: 'practices'})
       })
     },
-    // 加载题目
-    getSubjectList (query) {
-      fetchSubjectList(query).then(response => {
-        this.subjectList = response.data.list
-        if (this.subjectList.length === 0) {
+    // 上一题
+    last () {
+      if (this.query.serialNumber === 1) {
+        this.$notify({
+          title: '提示',
+          message: '已经是第一题了',
+          type: 'warn',
+          duration: 2000
+        })
+      } else {
+        // 先回退题目序号
+        this.query.serialNumber--
+        // 加载题目
+        this.getSubjectAndAnswer(this.query)
+      }
+    },
+    // 下一题
+    next () {
+      // 提交到后台
+      let answer = {
+        id: this.tempAnswer.id,
+        userId: this.userInfo.id,
+        examinationId: this.practice.id,
+        examRecordId: this.practiceRecord.id,
+        subjectId: this.tempSubject.id,
+        answer: this.option
+      }
+      saveOrUpdate(answer).then(response => {
+        console.log('提交成功')
+      }).catch(() => {
+        console.log('提交失败')
+      })
+      this.query.serialNumber++
+      this.getSubjectAndAnswer(this.query)
+    },
+    // 加载题目和答题
+    getSubjectAndAnswer (query) {
+      this.loading = true
+      getSubjectAnswer(query).then(response => {
+        if (response.data.data === null) {
+          this.$notify({
+            title: '提示',
+            message: '已经是最后一题了',
+            type: 'warn',
+            duration: 2000
+          })
+          this.query.serialNumber--
           this.loading = false
-          return
+        } else {
+          // 题目内容
+          this.tempSubject = response.data.data
+          // 答题
+          this.tempAnswer = this.tempSubject.answer
+          // 选项
+          this.option = this.tempAnswer.answer
+          this.loading = false
         }
-        this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
-        // 加载答题
-        let query = {
-          userId: this.userInfo.id,
-          examinationId: this.exam.id,
-          examRecordId: this.tempExamRecord.id,
-          courseId: '',
-          subjectId: this.tempSubject.id
-        }
-        this.getAnswerList(query)
       }).catch(() => {
         this.$notify({
           title: '失败',
@@ -208,125 +205,35 @@ export default {
         this.loading = false
       })
     },
-    // 加载答题
-    getAnswerList (query) {
-      fetchAnswerList(query).then(response => {
-        let list = response.data.list
-        if (list.length > 0) {
-          this.tempAnswer = list[0]
-          this.option = this.tempAnswer.answer
-        } else {
-          // 没找到
-          this.resetTempAnswer()
-        }
-        this.loading = false
-      })
-    },
-    // 上一题
-    last () {
-      if (this.subjectIndex === 1) {
-        this.$notify({
-          title: '提示',
-          message: '已经是第一题了',
-          type: 'warn',
-          duration: 2000
-        })
-        return
-      }
-      this.loading = true
-      // 先回退题目
-      this.subjectIndex--
-      this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
-      // 查找答题
-      let query = {
-        userId: this.userInfo.id,
-        examinationId: this.exam.id,
-        examRecordId: this.tempExamRecord.id,
-        courseId: '',
-        subjectId: this.tempSubject.id
-      }
-      this.getAnswerList(query)
-      this.loading = false
-    },
-    // 下一题
-    next () {
-      if (this.subjectIndex === this.subjectList.length) {
-        this.$notify({
-          title: '提示',
-          message: '已经是最后一题了',
-          type: 'warn',
-          duration: 2000
-        })
-        return
-      }
-      this.loading = true
-      // 提交到后台
-      let answer = {
-        id: this.tempAnswer.id,
-        userId: this.userInfo.id,
-        examinationId: this.exam.id,
-        examRecordId: this.tempExamRecord.id,
-        subjectId: this.tempSubject.id,
-        answer: this.option
-      }
-      saveOrUpdate(answer).then(response => {
-        console.log('提交成功')
-      }).catch(() => {
-        console.log('提交失败')
-      })
-      this.option = ''
-      this.subjectIndex++
-      this.tempSubject = this.getSubjectBySerialNumber(this.subjectIndex)
-      // 加载答题
-      let query = {
-        userId: this.userInfo.id,
-        examinationId: this.exam.id,
-        examRecordId: this.tempExamRecord.id,
-        courseId: '',
-        subjectId: this.tempSubject.id
-      }
-      this.getAnswerList(query)
-      this.loading = false
-    },
-    // 根据序号查询题目
-    getSubjectBySerialNumber (serialNumber) {
-      for (let i = 0; i < this.subjectList.length; i++) {
-        if (parseInt(this.subjectList[i].serialNumber) === serialNumber) {
-          return this.subjectList[i]
-        }
-      }
-    },
     // 答题卡
     answerCard () {
       this.dialogVisible = true
     },
     // 跳转题目
     toSubject (subject, index) {
-      this.tempSubject = subject
-      this.subjectIndex = index
+      this.query.serialNumber = index
+      this.getSubjectAndAnswer(this.query)
       this.dialogVisible = false
     },
     // 提交
-    submit () {
+    submitPractice () {
       this.$confirm('确定要提交吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         // 提交到后台
-        let answer = {
-          id: this.tempAnswer.id,
-          userId: this.userInfo.id,
-          examinationId: this.exam.id,
-          examRecordId: this.tempExamRecord.id,
-          subjectId: this.tempSubject.id,
-          answer: this.option
-        }
-        saveOrUpdate(answer).then(response => {
-          this.submitExam(answer)
+        store.dispatch('SubmitPractice', { examinationId: this.practice.id, examRecordId: this.practiceRecord.id, userId: this.userInfo.id }).then(res => {
+          this.$notify({
+            title: '提示',
+            message: '提交成功',
+            type: 'success',
+            duration: 2000
+          })
           // 禁用提交按钮
           this.disableSubmit = true
-        }).catch(() => {
+          this.$router.push({name: 'score', query: {type: 'practice'}})
+        }).catch((err) => {
           this.$notify({
             title: '提示',
             message: '提交失败',
@@ -335,37 +242,6 @@ export default {
           })
         })
       })
-    },
-    // 提交考试
-    submitExam (answer) {
-      submit({ examinationId: answer.examinationId, examRecordId: this.tempExamRecord.id, userId: answer.userId }).then(response => {
-        this.$notify({
-          title: '提示',
-          message: '提交成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.$router.push({name: 'score', query: { examinationId: answer.examinationId, examRecordId: this.tempExamRecord.id, userId: answer.userId }})
-      }).catch(() => {
-        this.$notify({
-          title: '提示',
-          message: '提交失败',
-          type: 'error',
-          duration: 2000
-        })
-      })
-    },
-    // 重置
-    resetTempAnswer () {
-      this.tempAnswer = {
-        id: '',
-        userId: '',
-        examinationId: '',
-        examRecordId: this.tempExamRecord.id,
-        courseId: '',
-        subjectId: '',
-        answer: ''
-      }
     }
   }
 }

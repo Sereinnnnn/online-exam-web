@@ -29,8 +29,8 @@
 import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
 import { getDownloadUrl } from '@/utils/util'
-import { addObj } from '@/api/exam/examRecord'
-import store from '../../store'
+import store from '@/store'
+
 export default {
   data () {
     return {
@@ -50,13 +50,13 @@ export default {
   computed: {
     // 获取用户信息
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      course: state => state.course.course
     })
   },
   created () {
-    let courseId = this.$route.query.courseId
-    if (courseId !== undefined && courseId !== null) {
-      this.query.courseId = courseId
+    if (this.course !== null) {
+      this.query.courseId = this.course.id
     }
     // 加载考试列表
     this.getExamList()

@@ -17,6 +17,9 @@ const getters = {
   menu: state => state.user.menu,
   isCollapse: state => state.common.isCollapse,
   exam: state => state.exam.exam,
-  examRecord: state => state.exam.examRecord
+  examRecord: state => state.exam.examRecord,
+  practice: state => state.practice.practice,
+  practiceRecord: state => state.practice.practiceRecord,
+  course: state => state.course.course
 }
 export default getters

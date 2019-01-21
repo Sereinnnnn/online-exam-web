@@ -36,8 +36,10 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
 import { getDownloadUrl } from '@/utils/util'
+import store from '@/store'
 
 export default {
   data () {
@@ -46,8 +48,19 @@ export default {
       practices: [],
       listQuery: {
         type: '2'
+      },
+      tempExamRecord: {
+        id: '',
+        userId: '',
+        examinationId: ''
       }
     }
+  },
+  computed: {
+    // 获取用户信息
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
   },
   created () {
     this.getPractices()
@@ -70,7 +83,29 @@ export default {
     },
     // 开始练习
     startPractice (practice) {
-      this.$router.push({name: 'practice', query: {examinationId: practice.id}})
+      this.tempExamRecord.examinationId = practice.id
+      this.tempExamRecord.userId = this.userInfo.id
+      // 查询考试信息
+      store.dispatch('GetPracticeInfo', practice).then(res => {
+        // 创建考试记录
+        store.dispatch('AddPracticeRecordInfo', this.tempExamRecord).then(res => {
+          this.$router.push({name: 'practice'})
+        }).catch((err) => {
+          this.$notify({
+            title: '提示',
+            message: '开始练习失败',
+            type: 'warn',
+            duration: 2000
+          })
+        })
+      }).catch((err) => {
+        this.$notify({
+          title: '提示',
+          message: '获取练习信息失败',
+          type: 'warn',
+          duration: 2000
+        })
+      })
     }
   }
 }

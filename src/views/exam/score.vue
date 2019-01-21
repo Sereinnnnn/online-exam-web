@@ -41,13 +41,21 @@ export default {
     ...mapState({
       userInfo: state => state.user.userInfo,
       exam: state => state.exam.exam,
-      examRecord: state => state.exam.examRecord
+      examRecord: state => state.exam.examRecord,
+      practice: state => state.practice.practice,
+      practiceRecord: state => state.practice.practiceRecord
     })
   },
   created () {
+    // 练习或考试
+    if (this.type === 'practice') {
+      this.query.examinationId = this.practice.id
+      this.query.examRecordId = this.practiceRecord.id
+    } else {
+      this.query.examinationId = this.exam.id
+      this.query.examRecordId = this.examRecord.id
+    }
     this.query.userId = this.userInfo.id
-    this.query.examinationId = this.exam.id
-    this.query.examRecordId = this.examRecord.id
     this.getScoreList(this.query)
   },
   methods: {

@@ -3,7 +3,7 @@
     <el-row :gutter="30">
       <el-col :span="18" :offset="2">
         <el-card class="subject-box-card" v-loading="loading">
-          <div class="subject-exam-title" v-if="!loading && tempSubject.id !== ''">{{exam.examinationName}}（共{{subjectList.length + 1}}题，合计{{exam.totalScore}}分）</div>
+          <div class="subject-exam-title" v-if="!loading && tempSubject.id !== ''">{{exam.examinationName}}（共{{exam.totalSubject}}题，合计{{exam.totalScore}}分）</div>
           <div class="subject-content" v-if="!loading && tempSubject.id !== ''">
             <div class="subject-title">
               <span class="subject-title-number">{{tempSubject.serialNumber}} .</span>
@@ -24,8 +24,8 @@
           </div>
           <div class="subject-buttons" v-if="!loading && tempSubject.id !== ''">
             <el-button plain @click="last">上一题</el-button>
-            <el-button v-if="tempSubject.serialNumber !== subjectList.length" plain @click="next">下一题</el-button>
-            <el-button v-if="tempSubject.serialNumber !== 0 && subjectIndex === subjectList.length" type="success" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
+            <el-button v-if="tempSubject.serialNumber !== exam.totalSubject" plain @click="next">下一题</el-button>
+            <el-button v-if="tempSubject.serialNumber !== 0 && subjectIndex === exam.totalSubject" type="success" @click="submitExam" v-bind:disabled="disableSubmit">提交</el-button>
           </div>
         </el-card>
       </el-col>
@@ -43,7 +43,7 @@
         <div class="answer-card">
           <el-button type="text" icon="el-icon-date" @click="answerCard">答题卡</el-button>
         </div>
-        <el-button type="success" icon="el-icon-date" @click="submit" v-bind:disabled="disableSubmit">提交</el-button>
+        <el-button type="success" icon="el-icon-date" @click="submitExam" v-bind:disabled="disableSubmit">提交</el-button>
       </el-col>
     </el-row>
     <el-dialog title="答题卡" :visible.sync="dialogVisible" width="50%" top="10vh" center>
@@ -60,7 +60,7 @@ import { mapState } from 'vuex'
 import CountDown from 'vue2-countdown'
 import { getSubjectAnswer } from '@/api/exam/subject'
 import { saveOrUpdate } from '@/api/exam/answer'
-import store from '../../store'
+import store from '@/store'
 
 export default {
   components: {
@@ -69,8 +69,6 @@ export default {
   data () {
     return {
       loading: true,
-      subjectList: [],
-      subjectIndex: 1,
       currentTime: 0,
       startTime: 0,
       endTime: 0,
@@ -259,48 +257,32 @@ export default {
       this.dialogVisible = false
     },
     // 提交
-    submit () {
+    submitExam () {
       this.$confirm('确定要提交吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         // 提交到后台
-        this.submitExam()
-        // 禁用提交按钮
-        this.disableSubmit = true
-      })
-    },
-    // 提交考试
-    submitExam () {
-      store.dispatch('SubmitExam', { examinationId: this.exam.id, examRecordId: this.examRecord.id, userId: this.userInfo.id }).then(res => {
-        this.$notify({
-          title: '提示',
-          message: '提交成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.$router.push({name: 'score'})
-      }).catch((err) => {
-        this.$notify({
-          title: '提示',
-          message: '提交失败',
-          type: 'error',
-          duration: 2000
+        store.dispatch('SubmitExam', { examinationId: this.exam.id, examRecordId: this.examRecord.id, userId: this.userInfo.id }).then(res => {
+          this.$notify({
+            title: '提示',
+            message: '提交成功',
+            type: 'success',
+            duration: 2000
+          })
+          // 禁用提交按钮
+          this.disableSubmit = true
+          this.$router.push({name: 'score', query: {type: 'exam'}})
+        }).catch((err) => {
+          this.$notify({
+            title: '提示',
+            message: '提交失败',
+            type: 'error',
+            duration: 2000
+          })
         })
       })
-    },
-    // 重置
-    resetTempAnswer () {
-      this.tempAnswer = {
-        id: '',
-        userId: '',
-        examinationId: '',
-        examRecordId: this.query.examRecordId,
-        courseId: '',
-        subjectId: '',
-        answer: ''
-      }
     }
   }
 }

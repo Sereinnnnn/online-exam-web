@@ -37,6 +37,8 @@
 </template>
 <script>
 import { courseList } from '@/api/exam/course'
+import store from '@/store'
+
 export default {
   data () {
     return {
@@ -58,7 +60,16 @@ export default {
     },
     // 加载考试类表
     getExamList (course) {
-      this.$router.push({name: 'exams', query: {courseId: course.id}})
+      store.dispatch('GetCourseInfo', course).then(res => {
+        this.$router.push({name: 'exams'})
+      }).catch((err) => {
+        this.$notify({
+          title: '提示',
+          message: '获取课程信息失败',
+          type: 'error',
+          duration: 2000
+        })
+      })
     }
   }
 }

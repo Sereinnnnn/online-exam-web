@@ -2,7 +2,6 @@ import { getObj } from '@/api/exam/exam'
 import { addObj } from '@/api/exam/examRecord'
 import {setStore, getStore} from '@/utils/store'
 import { submit } from '@/api/exam/answer'
-import user from "./user";
 
 const exam = {
   state: {
@@ -17,8 +16,7 @@ const exam = {
     GetExamInfo ({ commit, state }, exam) {
       return new Promise((resolve, reject) => {
         getObj(exam.id, {timeFormat: true}).then(response => {
-          const data = response.data.data
-          commit('SET_EXAM', data)
+          commit('SET_EXAM', response.data.data)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -29,8 +27,7 @@ const exam = {
     AddExamRecordInfo ({ commit, state }, examRecord) {
       return new Promise((resolve, reject) => {
         addObj(examRecord).then(response => {
-          const data = response.data.data
-          commit('SET_EXAM_RECORD', data)
+          commit('SET_EXAM_RECORD', response.data.data)
           resolve(response)
         }).catch(error => {
           reject(error)
