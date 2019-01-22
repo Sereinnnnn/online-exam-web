@@ -19,7 +19,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getScore } from '@/api/exam/score'
+import { getObj } from '@/api/exam/examRecord'
 
 export default {
   data () {
@@ -30,9 +30,7 @@ export default {
         inCorrectNumber: ''
       },
       query: {
-        userId: '',
-        examinationId: '',
-        examRecordId: ''
+        id: ''
       }
     }
   },
@@ -50,18 +48,16 @@ export default {
     // 练习或考试
     this.type = this.$route.query.type
     if (this.type === 'practice') {
-      this.query.examinationId = this.practice.id
-      this.query.examRecordId = this.practiceRecord.id
+      this.query.id = this.practiceRecord.id
     } else {
-      this.query.examinationId = this.exam.id
-      this.query.examRecordId = this.examRecord.id
+      this.query.id = this.examRecord.id
     }
     this.query.userId = this.userInfo.id
-    this.getScoreList(this.query)
+    this.getScoreList()
   },
   methods: {
-    getScoreList (query) {
-      getScore(query).then(response => {
+    getScoreList () {
+      getObj(this.query.id).then(response => {
         if (response.data.data.id === null) {
           this.resetScore()
         } else {

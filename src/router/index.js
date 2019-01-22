@@ -63,7 +63,7 @@ export const constantRouterMap = [
       {
         path: '/exam-record',
         name: 'exam-record',
-        component: () => import('@/views/exam/examRecord')
+        component: () => import('@/views/exam/examRecords')
       },
       {
         path: '/knowledge',
