@@ -56,12 +56,12 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import CountDown from 'vue2-countdown'
 import { getSubjectAnswer } from '@/api/exam/subject'
 import { saveOrUpdate } from '@/api/exam/answer'
 import store from '@/store'
+import moment from 'moment'
 
 export default {
   components: {
@@ -141,23 +141,16 @@ export default {
     startExam () {
       // 查询考试信息
       store.dispatch('GetExamInfo', this.exam).then(res => {
-        // 获取服务器的当前时间
-        this.currentTime = parseInt(this.exam.currentTime)
-        // 考试开始时间
-        this.startTime = parseInt(this.exam.startTime)
-        // 考试结束时间
-        this.endTime = parseInt(this.exam.endTime)
-        // 题目数
-        this.exam.totalSubject = parseInt(this.exam.totalSubject)
         // 校验考试时间
-        if (this.currentTime > this.endTime) {
+        const currentTime = moment(this.exam.currentTime)
+        if (currentTime.isAfter(this.exam.endTime)) {
           this.$notify({
             title: '提示',
             message: '考试已结束',
             type: 'warn',
             duration: 2000
           })
-        } else if (this.currentTime < parseInt(this.exam.startTime)) {
+        } else if (currentTime.isBefore(this.exam.startTime)) {
           // 考试未开始
           this.$notify({
             title: '提示',
@@ -166,6 +159,14 @@ export default {
             duration: 2000
           })
         } else {
+          // 获取服务器的当前时间
+          this.currentTime = currentTime.valueOf()
+          // 考试开始时间
+          this.startTime = this.currentTime
+          // 考试结束时间
+          this.endTime = moment(this.exam.endTime).valueOf()
+          // 题目数
+          this.exam.totalSubject = parseInt(this.exam.totalSubject)
           this.disableSubmit = false
           // 加载题目和答题
           this.getSubjectAndAnswer(this.query)

@@ -15,7 +15,7 @@ const exam = {
   actions: {
     GetExamInfo ({ commit, state }, exam) {
       return new Promise((resolve, reject) => {
-        getObj(exam.id, {timeFormat: true}).then(response => {
+        getObj(exam.id).then(response => {
           commit('SET_EXAM', response.data.data)
           resolve(response)
         }).catch(error => {

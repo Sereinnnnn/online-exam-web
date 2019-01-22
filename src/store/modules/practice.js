@@ -15,7 +15,7 @@ const practice = {
   actions: {
     GetPracticeInfo ({ commit, state }, practice) {
       return new Promise((resolve, reject) => {
-        getObj(practice.id, {timeFormat: true}).then(response => {
+        getObj(practice.id).then(response => {
           commit('SET_PRACTICE', response.data.data)
           resolve(response)
         }).catch(error => {

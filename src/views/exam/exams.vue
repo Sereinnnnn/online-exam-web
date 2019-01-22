@@ -30,6 +30,7 @@ import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
 import { getDownloadUrl } from '@/utils/util'
 import store from '@/store'
+import moment from 'moment'
 
 export default {
   data () {
@@ -83,16 +84,16 @@ export default {
       this.tempExamRecord.examinationId = exam.id
       this.tempExamRecord.userId = this.userInfo.id
       // 校验考试时间
-      const currentTime = parseInt(exam.currentTime)
+      const currentTime = moment(exam.currentTime)
       // 校验结束时间
-      if (currentTime > parseInt(exam.endTime)) {
+      if (currentTime.isAfter(exam.endTime)) {
         this.$notify({
           title: '提示',
           message: '考试已结束',
           type: 'warn',
           duration: 2000
         })
-      } else if (currentTime < parseInt(exam.startTime)) {
+      } else if (currentTime.isBefore(exam.startTime)) {
         // 考试未开始
         this.$notify({
           title: '提示',
