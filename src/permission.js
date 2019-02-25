@@ -16,14 +16,21 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
-        }).catch((err) => {
-          store.dispatch('FedLogOut').then(() => {
-            Message.error(err || 'Verification failed, please login again')
-            next({ path: '/' })
+        // 获取附件配置信息
+        if (store.getters.attachmentConfig.host === undefined) {
+          store.dispatch('GetAttachmentConfig').then(res => {
+            store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+              next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+            }).catch((err) => {
+              store.dispatch('FedLogOut').then(() => {
+                Message.error(err || 'Verification failed, please login again')
+                next({ path: '/' })
+              })
+            })
+          }).catch(() => {
+            console.log('获取附件配置失败！')
           })
-        })
+        }
       } else {
         next()
       }

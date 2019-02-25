@@ -112,3 +112,13 @@ export const randomLenNum = (len, date) => {
 export const getDownloadUrl = (attachmentId) => {
   return ATTACHMENT_URL + '/download?id=' + attachmentId
 }
+
+/**
+ * 返回附件的预览地址
+ * @param attachmentConfig
+ * @param fastFileId
+ * @returns {string}
+ */
+export const getAttachmentPreviewUrl = function(attachmentConfig, fastFileId) {
+  return attachmentConfig.host + '/' + fastFileId
+}
