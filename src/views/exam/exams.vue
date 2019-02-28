@@ -8,7 +8,7 @@
     <el-row :gutter="100" v-loading="listLoading">
       <el-col :span="6" v-for="(exam, index) in examList" :key="exam.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
         <el-card :body-style="{ padding: '12px' }">
-          <img :src="getAvatar(exam.avatar)" v-if="isNotEmpty(exam.avatar)" class="exam-image">
+          <img :src="getAvatar(exam.avatar)" v-if="exam.avatar" class="exam-image">
           <img src="../../../static/images/home/icon_function3.jpg" v-else class="exam-image">
           <div style="padding: 14px;">
             <span>{{ exam.examinationName }}</span>
@@ -28,7 +28,7 @@
 <script>
 import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
-import { getDownloadUrl, isNotEmpty } from '@/utils/util'
+import { isNotEmpty, getAttachmentPreviewUrl } from '@/utils/util'
 import store from '@/store'
 import moment from 'moment'
 
@@ -52,7 +52,8 @@ export default {
     // 获取用户信息
     ...mapState({
       userInfo: state => state.user.userInfo,
-      course: state => state.course.course
+      course: state => state.course.course,
+      sysConfig: state => state.sysConfig.sysConfig
     })
   },
   created () {
@@ -124,8 +125,8 @@ export default {
         })
       }
     },
-    getAvatar (attachmentId) {
-      return getDownloadUrl(attachmentId)
+    getAvatar (avatar) {
+      return getAttachmentPreviewUrl(this.sysConfig, avatar)
     }
   }
 }

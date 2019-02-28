@@ -10,7 +10,7 @@
         <el-col :offset="8">
           <div class="practice">
             <a href="javascript:void(0);" class="practice-title">
-              <img :src="getAvatar(practice.avatar)" v-if="isNotEmpty(practice.avatar)" class="practice-image">
+              <img :src="getAvatar(practice.avatar)" v-if="practice.avatar" class="practice-image">
               <img src="../../../static/images/practices/practice.png" v-else class="practice-image">
               <p>
                 <span class="practice-name">{{practice.examinationName}}</span>
@@ -38,7 +38,7 @@
 <script>
 import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
-import { getDownloadUrl, isNotEmpty } from '@/utils/util'
+import { isNotEmpty, getAttachmentPreviewUrl } from '@/utils/util'
 import store from '@/store'
 
 export default {
@@ -59,7 +59,8 @@ export default {
   computed: {
     // 获取用户信息
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: state => state.user.userInfo,
+      sysConfig: state => state.sysConfig.sysConfig
     })
   },
   created () {
@@ -78,8 +79,8 @@ export default {
     getExamList (practice) {
       this.$router.push({name: 'exams', query: {practiceId: practice.id}})
     },
-    getAvatar (attachmentId) {
-      return getDownloadUrl(attachmentId)
+    getAvatar (avatar) {
+      return getAttachmentPreviewUrl(this.sysConfig, avatar)
     },
     // 开始练习
     startPractice (practice) {

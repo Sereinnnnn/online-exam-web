@@ -115,14 +115,14 @@ export const getDownloadUrl = (attachmentId) => {
 
 /**
  * 返回附件的预览地址
- * @param attachmentConfig
+ * @param sysConfig
  * @param fastFileId
  * @returns {string}
  */
-export const getAttachmentPreviewUrl = function(attachmentConfig, fastFileId) {
+export const getAttachmentPreviewUrl = function(sysConfig, fastFileId) {
   let url = ''
-  if (isNotEmpty(attachmentConfig.host)) {
-    url = attachmentConfig.host + '/' + fastFileId
+  if (isNotEmpty(sysConfig.fdfsHttpHost)) {
+    url = sysConfig.fdfsHttpHost + '/' + fastFileId
   }
   return url
 }

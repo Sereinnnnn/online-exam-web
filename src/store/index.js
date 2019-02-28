@@ -16,7 +16,7 @@ import practice from './modules/practice'
 // getters
 import getters from './getters'
 
-import attachment from './modules/attachment'
+import sysConfig from './modules/sysConfig'
 
 Vue.use(Vuex)
 
@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     exam,
     practice,
     course,
-    attachment
+    sysConfig
   },
   getters
 })

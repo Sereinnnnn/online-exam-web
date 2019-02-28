@@ -1,7 +1,7 @@
 import {loginByUsername, registerByUsername, logout, getUserInfo} from '@/api/admin/login'
 import {setToken, removeToken} from '@/utils/auth'
 import {setStore, getStore} from '@/utils/store'
-import {encryption, getAttachmentPreviewUrl} from '@/utils/util'
+import {encryption, getAttachmentPreviewUrl, isNotEmpty} from '@/utils/util'
 
 const user = {
   state: {
@@ -63,12 +63,13 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(response => {
           const data = response.data.data
-          if (data.user.avatarId === null) {
-            data.user.avatarUrl = data.user.avatar
+          // 获取系统配置
+          const sysConfig = getStore({ name: 'sys_config' })
+          if (!isNotEmpty(data.user.avatarId)) {
+            // 采用默认头像
+            data.user.avatarUrl = sysConfig.defaultAvatar
           } else {
-            // 获取附件配置
-            const attachmentConfig = getStore({ name: 'attachment_config' })
-            data.user.avatarUrl = getAttachmentPreviewUrl(attachmentConfig, data.user.avatar)
+            data.user.avatarUrl = getAttachmentPreviewUrl(sysConfig, data.user.avatar)
           }
           commit('SET_ROLES', data.roles)
           commit('SET_USER_INFO', data.user)
@@ -91,7 +92,7 @@ const user = {
           commit('SET_REFRESH_TOKEN', '')
           commit('SET_ROLES', [])
           // 清除附件配置信息
-          commit('SET_ATTACHMENT_CONFIG', {})
+          commit('SET_SYS_CONFIG', {})
           removeToken()
           resolve()
         }).catch(error => {
@@ -110,7 +111,7 @@ const user = {
         commit('SET_REFRESH_TOKEN', '')
         commit('SET_ROLES', [])
         // 清除附件配置信息
-        commit('SET_ATTACHMENT_CONFIG', {})
+        commit('SET_SYS_CONFIG', {})
         removeToken()
         resolve()
       })

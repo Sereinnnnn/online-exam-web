@@ -21,6 +21,6 @@ const getters = {
   practice: state => state.practice.practice,
   practiceRecord: state => state.practice.practiceRecord,
   course: state => state.course.course,
-  attachmentConfig: state => state.attachment.attachmentConfig
+  sysConfig: state => state.sysConfig.sysConfig
 }
 export default getters
