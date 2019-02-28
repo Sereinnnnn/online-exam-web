@@ -10,7 +10,7 @@
         <el-col :offset="8">
           <div class="course">
             <a href="javascript:void(0);" class="course-title">
-              <img :src="course.avatar" v-if="course.avatar !== undefined" class="course-image">
+              <img :src="course.avatar" v-if="isNotEmpty(course.avatar)" class="course-image">
               <img src="../../../static/images/practices/practice.png" v-else class="course-image">
               <p>
                 <span class="course-name">{{course.courseName}}</span>
@@ -38,6 +38,7 @@
 <script>
 import { courseList } from '@/api/exam/course'
 import store from '@/store'
+import { isNotEmpty, notifyFail } from '@/utils/util'
 
 export default {
   data () {
@@ -63,12 +64,7 @@ export default {
       store.dispatch('GetCourseInfo', course).then(res => {
         this.$router.push({name: 'exams'})
       }).catch((err) => {
-        this.$notify({
-          title: '提示',
-          message: '获取课程信息失败',
-          type: 'error',
-          duration: 2000
-        })
+        notifyFail(this, '获取课程信息失败')
       })
     }
   }

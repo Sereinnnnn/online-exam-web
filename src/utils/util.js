@@ -120,5 +120,52 @@ export const getDownloadUrl = (attachmentId) => {
  * @returns {string}
  */
 export const getAttachmentPreviewUrl = function(attachmentConfig, fastFileId) {
-  return attachmentConfig.host + '/' + fastFileId
+  let url = ''
+  if (isNotEmpty(attachmentConfig.host)) {
+    url = attachmentConfig.host + '/' + fastFileId
+  }
+  return url
+}
+
+/**
+ * 判断对象是否为空
+ * @param obj
+ * @returns {boolean}
+ */
+export const isNotEmpty = (obj) => {
+  let flag = true
+  if (obj === '' || obj == null || obj === undefined || obj === 'undefined') {
+    flag = false
+  }
+  return flag
+}
+
+/**
+ * 提示
+ * @param obj
+ * @param title
+ * @param msg
+ * @param type
+ * @param duration
+ */
+export const notify = (obj, title, msg, type, duration) => {
+  obj.$notify({ title: title, message: msg, type: type, duration: duration })
+}
+
+/**
+ * 成功提示
+ * @param obj
+ * @param msg
+ */
+export const notifySuccess = (obj, msg) => {
+  notify(obj, '成功', msg, 'success', 2000)
+}
+
+/**
+ * 失败提示
+ * @param obj
+ * @param msg
+ */
+export const notifyFail = (obj, msg) => {
+  notify(obj, '失败', msg, 'error', 2000)
 }

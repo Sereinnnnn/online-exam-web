@@ -10,7 +10,7 @@
         <el-col :offset="8">
           <div class="practice">
             <a href="javascript:void(0);" class="practice-title">
-              <img :src="getAvatar(practice.avatar)" v-if="practice.avatar !== undefined && practice.avatar !== null && practice.avatar !== ''" class="practice-image">
+              <img :src="getAvatar(practice.avatar)" v-if="isNotEmpty(practice.avatar)" class="practice-image">
               <img src="../../../static/images/practices/practice.png" v-else class="practice-image">
               <p>
                 <span class="practice-name">{{practice.examinationName}}</span>
@@ -38,7 +38,7 @@
 <script>
 import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
-import { getDownloadUrl } from '@/utils/util'
+import { getDownloadUrl, isNotEmpty } from '@/utils/util'
 import store from '@/store'
 
 export default {

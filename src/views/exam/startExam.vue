@@ -62,6 +62,7 @@ import { getSubjectAnswer } from '@/api/exam/subject'
 import { saveOrUpdate } from '@/api/exam/answer'
 import store from '@/store'
 import moment from 'moment'
+import { notifySuccess, notifyFail } from '@/utils/util'
 
 export default {
   components: {
@@ -249,12 +250,7 @@ export default {
           this.loading = false
         }
       }).catch(() => {
-        this.$notify({
-          title: '失败',
-          message: '加载题目失败',
-          type: 'error',
-          duration: 2000
-        })
+        notifyFail(this, '加载题目失败')
         this.loading = false
       })
     },
@@ -277,22 +273,12 @@ export default {
       }).then(() => {
         // 提交到后台
         store.dispatch('SubmitExam', { examinationId: this.exam.id, examRecordId: this.examRecord.id, userId: this.userInfo.id }).then(res => {
-          this.$notify({
-            title: '提示',
-            message: '提交成功',
-            type: 'success',
-            duration: 2000
-          })
+          notifySuccess(this, '提交成功')
           // 禁用提交按钮
           this.disableSubmit = true
           this.$router.push({name: 'score', query: {type: 'exam'}})
         }).catch((err) => {
-          this.$notify({
-            title: '提示',
-            message: '提交失败',
-            type: 'error',
-            duration: 2000
-          })
+          notifyFail(this, '提交失败')
         })
       })
     }

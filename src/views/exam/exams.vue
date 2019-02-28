@@ -8,7 +8,7 @@
     <el-row :gutter="100" v-loading="listLoading">
       <el-col :span="6" v-for="(exam, index) in examList" :key="exam.id" :offset="(index === 0 || index % 3 === 0) ? 2 : 0">
         <el-card :body-style="{ padding: '12px' }">
-          <img :src="getAvatar(exam.avatar)" v-if="exam.avatar !== undefined && exam.avatar !== null && exam.avatar !== ''" class="exam-image">
+          <img :src="getAvatar(exam.avatar)" v-if="isNotEmpty(exam.avatar)" class="exam-image">
           <img src="../../../static/images/home/icon_function3.jpg" v-else class="exam-image">
           <div style="padding: 14px;">
             <span>{{ exam.examinationName }}</span>
@@ -28,7 +28,7 @@
 <script>
 import { mapState } from 'vuex'
 import { fetchList } from '@/api/exam/exam'
-import { getDownloadUrl } from '@/utils/util'
+import { getDownloadUrl, isNotEmpty } from '@/utils/util'
 import store from '@/store'
 import moment from 'moment'
 
@@ -56,7 +56,7 @@ export default {
     })
   },
   created () {
-    if (this.course !== null) {
+    if (isNotEmpty(this.course)) {
       this.query.courseId = this.course.id
     }
     // 加载考试列表

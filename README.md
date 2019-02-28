@@ -2,21 +2,21 @@
 
 在线考试前端
 
-#### 功能演示
+访问地址：[在线考试](http://182.254.233.125)（没有部署后端，所以不能登录）
 
-![image](doc/images/image_web_exam_all.png)
+#### 功能演示
 
 ![image](doc/images/image_web_exam.png)
 
 ![image](doc/images/image_web_exam_card.png)
 
-![image](doc/images/image_web_exam_score.png)
-
 ![image](doc/images/image_web_incorrect_answer.png)
 
 ![image](doc/images/image_web_exam_record.png)
 
-- [访问地址](http://182.254.233.125)
+***
 
-[效果](https://gitee.com/wells2333/online-exam-web/blob/master/static/images/demo/demo.gif)
+### 关于
+
+作者：1633736729@qq.com
 
