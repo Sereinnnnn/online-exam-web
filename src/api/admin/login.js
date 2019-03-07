@@ -15,7 +15,7 @@ export function loginByUsername (username, password, code, randomStr) {
 
 export function registerByUsername (obj) {
   return request({
-    url: '/admin/user/register',
+    url: '/admin/api/v1/user/register',
     method: 'post',
     data: obj
   })
@@ -23,7 +23,7 @@ export function registerByUsername (obj) {
 
 export function logout (accesstoken, refreshToken) {
   return request({
-    url: '/auth/authentication/removeToken',
+    url: '/auth/api/v1/authentication/removeToken',
     method: 'post',
     params: {accesstoken, refreshToken}
   })
@@ -31,7 +31,7 @@ export function logout (accesstoken, refreshToken) {
 
 export function getUserInfo (token) {
   return request({
-    url: '/admin/user/info',
+    url: '/admin/api/v1/user/info',
     method: 'get'
   })
 }

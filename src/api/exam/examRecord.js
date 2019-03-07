@@ -1,8 +1,10 @@
 import request from '@/router/axios'
 
+const baseExamRecordUrl = '/exam/api/v1/examRecord/'
+
 export function fetchList(query) {
   return request({
-    url: '/exam/examRecord/examRecordList',
+    url: baseExamRecordUrl + 'examRecordList',
     method: 'get',
     params: query
   })
@@ -10,7 +12,7 @@ export function fetchList(query) {
 
 export function getObj(id, query) {
   return request({
-    url: '/exam/examRecord/' + id,
+    url: baseExamRecordUrl + id,
     method: 'get',
     params: query
   })
@@ -18,7 +20,7 @@ export function getObj(id, query) {
 
 export function addObj(obj) {
   return request({
-    url: '/exam/examRecord/',
+    url: baseExamRecordUrl,
     method: 'post',
     data: obj
   })

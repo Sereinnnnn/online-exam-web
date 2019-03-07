@@ -1,8 +1,10 @@
 import request from '@/router/axios'
 
+const baseAnswerUrl = '/exam/api/v1/answer/'
+
 export function fetchAnswerList(query) {
   return request({
-    url: '/exam/answer/answerList',
+    url: baseAnswerUrl + 'answerList',
     method: 'get',
     params: query
   })
@@ -10,14 +12,14 @@ export function fetchAnswerList(query) {
 
 export function getAnswer(id) {
   return request({
-    url: '/exam/answer/' + id,
+    url: baseAnswerUrl + id,
     method: 'get'
   })
 }
 
 export function addAnswer(obj) {
   return request({
-    url: '/exam/answer/',
+    url: baseAnswerUrl,
     method: 'post',
     data: obj
   })
@@ -25,7 +27,7 @@ export function addAnswer(obj) {
 
 export function putAnswer(obj) {
   return request({
-    url: '/exam/answer/',
+    url: baseAnswerUrl,
     method: 'put',
     data: obj
   })
@@ -33,14 +35,14 @@ export function putAnswer(obj) {
 
 export function delAnswer(id) {
   return request({
-    url: '/exam/answer/' + id,
+    url: baseAnswerUrl + id,
     method: 'delete'
   })
 }
 
 export function saveOrUpdate(obj) {
   return request({
-    url: '/exam/answer/saveOrUpdate',
+    url: baseAnswerUrl + 'saveOrUpdate',
     method: 'post',
     data: obj
   })
@@ -48,7 +50,7 @@ export function saveOrUpdate(obj) {
 
 export function submit(obj) {
   return request({
-    url: '/exam/answer/submit',
+    url: baseAnswerUrl + 'submit',
     method: 'post',
     data: obj
   })

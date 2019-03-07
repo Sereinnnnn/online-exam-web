@@ -107,7 +107,7 @@ export default {
         passwordType: 'password'
       },
       code: {
-        src: '/admin/code',
+        src: '/admin/api/v1/code',
         value: '',
         len: 4,
         type: 'image'
@@ -135,7 +135,7 @@ export default {
       this.login.form.randomStr = randomLenNum(this.code.len, true)
       this.code.type === 'text'
         ? (this.code.value = randomLenNum(this.code.len))
-        : (this.code.src = `/admin/code/${this.login.form.randomStr}`)
+        : (this.code.src = `/admin/api/v1/code/${this.login.form.randomStr}`)
     },
     handleLogin () {
       if (getToken()) {

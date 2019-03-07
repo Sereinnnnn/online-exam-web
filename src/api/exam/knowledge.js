@@ -1,8 +1,10 @@
 import request from '@/router/axios'
 
+const baseKnowledgeUrl = '/exam/api/v1/knowledge/'
+
 export function fetchKnowledgeList(query) {
   return request({
-    url: '/exam/knowledge/knowledgeList',
+    url: baseKnowledgeUrl + 'knowledgeList',
     method: 'get',
     params: query
   })
@@ -10,7 +12,7 @@ export function fetchKnowledgeList(query) {
 
 export function getObj(id) {
   return request({
-    url: '/exam/knowledge/' + id,
+    url: baseKnowledgeUrl + id,
     method: 'get'
   })
 }
