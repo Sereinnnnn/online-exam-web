@@ -12,10 +12,6 @@
 
 ![image](doc/images/image_web_incorrect_answer.png)
 
-![image](doc/images/image_web_exam_record.png)
-
-![image](doc/images/image_web_practices.png)
-
 ***
 
 ### 关于

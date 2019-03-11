@@ -191,9 +191,9 @@ export default {
       > a {
         background-size: cover;
         display: block;
-        @include wh(220px, 50px);
+        @include wh(213px, 54px);
         text-indent: -9999px;
-        background: url(/static/images/home/logo.png) no-repeat 0 0;
+        background: url(/static/images/home/logoko.png) no-repeat 0 0;
       }
     }
     .nav-list {
