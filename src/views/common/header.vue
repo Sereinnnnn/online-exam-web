@@ -39,7 +39,7 @@
             <el-button v-if="!login" size="medium" plain class="login-button" @click="handleLogin">登录</el-button>
             <div v-if="login">
               <div>
-                <img class="avatar" :src="userInfo.avatarUrl">
+                <img class="avatar" :src="userInfo.avatar">
               </div>
             </div>
             <div class="username" v-if="login">

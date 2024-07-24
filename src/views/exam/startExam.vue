@@ -243,15 +243,22 @@ export default {
         } else {
           // 题目内容
           this.tempSubject = response.data.data
+          console.log("this.tempSubject")
+          console.log(this.tempSubject)
           // 答题
           this.tempAnswer = this.tempSubject.answer
+          console.log("this.tempAnswer")
+          console.log(this.tempAnswer)
           // 选项
           this.option = this.tempAnswer.answer
+          console.log("this.option")
+          console.log(this.option)
           this.loading = false
         }
       }).catch(() => {
         notifyFail(this, '加载题目失败')
         this.loading = false
+        console.log("加载题目失败")
       })
     },
     // 答题卡
